@@ -76,38 +76,8 @@ public class EscuchaMensajes extends Thread {
 					
 				case Comando.ATACAR:
 					paqueteAtacar = (PaqueteAtacar) gson.fromJson(objetoLeido, PaqueteAtacar.class);
-					if ( juego.getEstadoBatalla().getEnemigo().getSalud() < paqueteAtacar.getNuevaSaludPersonaje() ) {
-						juego.getEstadoBatalla().getEnemigo().serCurado(paqueteAtacar.getNuevaSaludPersonaje() -
-								juego.getEstadoBatalla().getEnemigo().getSalud());
-					} else {
-						juego.getEstadoBatalla().getEnemigo().serRobadoSalud(juego.getEstadoBatalla().getEnemigo().getSalud() -
-								paqueteAtacar.getNuevaSaludPersonaje());
-					}
-					
-					if ( juego.getEstadoBatalla().getEnemigo().getEnergia() < paqueteAtacar.getNuevaEnergiaPersonaje() ) {
-						juego.getEstadoBatalla().getEnemigo().serEnergizado(paqueteAtacar.getNuevaEnergiaPersonaje() -
-								juego.getEstadoBatalla().getEnemigo().getEnergia());
-					} else {
-						juego.getEstadoBatalla().getEnemigo().serDesenergizado(juego.getEstadoBatalla().getEnemigo().getEnergia() -
-								paqueteAtacar.getNuevaEnergiaPersonaje());
-					}
-					
-					if ( juego.getEstadoBatalla().getPersonaje().getSalud() < paqueteAtacar.getNuevaSaludEnemigo() ) {
-						juego.getEstadoBatalla().getPersonaje().serCurado(paqueteAtacar.getNuevaSaludEnemigo() -
-								juego.getEstadoBatalla().getPersonaje().getSalud());
-					} else {
-						juego.getEstadoBatalla().getPersonaje().serRobadoSalud(juego.getEstadoBatalla().getPersonaje().getSalud() -
-								paqueteAtacar.getNuevaSaludEnemigo());
-					}
-					
-					if ( juego.getEstadoBatalla().getPersonaje().getEnergia() < paqueteAtacar.getNuevaSaludEnemigo() ) {
-						juego.getEstadoBatalla().getPersonaje().serEnergizado(paqueteAtacar.getNuevaSaludEnemigo() -
-								juego.getEstadoBatalla().getPersonaje().getEnergia());
-					} else {
-						juego.getEstadoBatalla().getPersonaje().serDesenergizado(juego.getEstadoBatalla().getPersonaje().getEnergia() -
-								paqueteAtacar.getNuevaSaludEnemigo());
-					}
-					
+					juego.getEstadoBatalla().getEnemigo().refreshAtacante(paqueteAtacar);
+					juego.getEstadoBatalla().getPersonaje().refreshAtacado(paqueteAtacar);
 					juego.getEstadoBatalla().setMiTurno(true);
 					break;
 					
