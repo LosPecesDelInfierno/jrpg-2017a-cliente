@@ -1,5 +1,5 @@
 # World Of Middle Earth (WOME) - cliente
-
+[![Build Status](https://travis-ci.org/LosPecesDelInfierno/jrpg-2017a-cliente.svg?branch=master)](https://travis-ci.org/LosPecesDelInfierno/jrpg-2017a-cliente)
 ## Sobre las personas
 
 > Para ver los participantes anteriores, referirse al archivo [humans.md](humans.md)
@@ -12,12 +12,11 @@
 
 ### Integrantes del equipo
 
-* Completar ([xxxx](https://github.com/xxxx))
-* Completar ([xxxx](https://github.com/xxxx))
-* Completar ([xxxx](https://github.com/xxxx))
-* Completar ([xxxx](https://github.com/xxxx))
-* Completar ([xxxx](https://github.com/xxxx))
-* Completar ([xxxx](https://github.com/xxxx))
+* Enrique Lamberto ([enquibe](https://github.com/enquibe))
+* Lautaro Aimar Bobadilla ([lautaroaimar](https://github.com/lautaroaimar))
+* Federico Marino Dragoset ([fedemarino37](https://github.com/fedemarino37))
+* Luciano Tonlorenzi ([ltonlorenzi](https://github.com/ltonlorenzi))
+* Mariano Gambacorta ([mgambacorta](https://github.com/mgambacorta))
 
 ## Sobre la tecnología
 
