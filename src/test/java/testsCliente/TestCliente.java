@@ -71,6 +71,7 @@ public class TestCliente {
 		pu.setComando(Comando.REGISTRO);
 		pu.setUsername("nuevoUser");
 		pu.setPassword("test");
+		// Se setea el msje para que serverStub pregunte por qué simulacion tiene que actuar
 		pu.setMensaje(Paquete.msjExito);
 		Cliente cliente = new Cliente(ipDefault,puerto);
 
@@ -106,6 +107,7 @@ public class TestCliente {
 		pu.setComando(Comando.REGISTRO);
 		pu.setUsername("nuevoUser");
 		pu.setPassword("test");
+		// Se setea el msje para que serverStub pregunte por qué simulacion tiene que actuar
 		pu.setMensaje(Paquete.msjFracaso);
 
 		Cliente cliente = new Cliente();
@@ -133,7 +135,7 @@ public class TestCliente {
 			e.printStackTrace();
 		}
 	}
-@Ignore
+
 	@Test
 	public void testRegistrarPersonaje() {
 		Gson gson = new Gson();
@@ -145,7 +147,9 @@ public class TestCliente {
 		pu.setComando(Comando.REGISTRO);
 		pu.setUsername("nuevoUser");
 		pu.setPassword("test");
-
+		// Se setea el msje para que serverStub pregunte por qué simulacion tiene que actuar
+		pu.setMensaje(Paquete.msjExito);
+		
 		// Registro de personaje
 		PaquetePersonaje pp = new PaquetePersonaje();
 		pp.setComando(Comando.CREACIONPJ);
@@ -165,7 +169,7 @@ public class TestCliente {
 			// Envio el paquete de registro de usuario
 			cliente.getSalida().writeObject(gson.toJson(pu));
 
-			// Recibo la respuesta del servidor
+			// Recibo la respuesta simulada del servidor
 			Paquete paquete = (Paquete) gson.fromJson((String) cliente.getEntrada().readObject(), Paquete.class);
 
 			// Envio el paquete de registro de personaje

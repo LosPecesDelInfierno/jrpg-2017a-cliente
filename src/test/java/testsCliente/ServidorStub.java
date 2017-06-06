@@ -9,8 +9,9 @@ import com.google.gson.Gson;
 
 import mensajeria.Comando;
 import mensajeria.Paquete;
+import mensajeria.PaquetePersonaje;
 import mensajeria.PaqueteUsuario;
-//import servidor.Servidor;
+
 
 //import servidor.Conector;
 //import servidor.EscuchaCliente;
@@ -48,6 +49,7 @@ public class ServidorStub extends Thread {
 				Paquete paquete;
 				Paquete paqueteSv = new Paquete(null, 0);
 				PaqueteUsuario paqueteUsuario = new PaqueteUsuario();
+				PaquetePersonaje paquetePersonaje = new PaquetePersonaje();
 
 				String cadenaLeida = (String) entrada.readObject();
 
@@ -72,6 +74,18 @@ public class ServidorStub extends Thread {
 						}
 						break;
 						
+					case Comando.CREACIONPJ:
+						
+						// Casteo el paquete personaje
+						paquetePersonaje = (PaquetePersonaje) (gson.fromJson(cadenaLeida, PaquetePersonaje.class));
+						
+						// No guardo guardo el personaje en ese usuario por ser una simulacion que no trabaja contra el server real.
+						//Servidor.getConector().registrarPersonaje(paquetePersonaje, paqueteUsuario);
+						
+						// Le envio el id del personaje
+						salida.writeObject(gson.toJson(paquetePersonaje, paquetePersonaje.getClass()));
+						
+						break;
 					}
 					cadenaLeida = (String) entrada.readObject();
 				}
