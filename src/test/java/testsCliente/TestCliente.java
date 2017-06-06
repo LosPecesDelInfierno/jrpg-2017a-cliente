@@ -23,7 +23,7 @@ import mensajeria.PaqueteUsuario;
 public class TestCliente {
 
 	private final String ipDefault = "127.0.0.1";
-	private final int puerto = 9999;
+	private final int puerto = 9000;
 	private ServidorStub serverStub;
 
 	@Before
@@ -116,7 +116,7 @@ public class TestCliente {
 		// tiene que actuar
 		pu.setMensaje(Paquete.msjFracaso);
 
-		Cliente cliente = new Cliente();
+		Cliente cliente = new Cliente(ipDefault, puerto);
 
 		try {
 
@@ -146,7 +146,7 @@ public class TestCliente {
 	public void testRegistrarPersonaje() {
 		Gson gson = new Gson();
 
-		Cliente cliente = new Cliente();
+		Cliente cliente = new Cliente(ipDefault, puerto);
 
 		// Registro de usuario
 		PaqueteUsuario pu = new PaqueteUsuario();
@@ -203,7 +203,7 @@ public class TestCliente {
 	@Test
 	public void testIniciarSesionExitoso() {
 		Gson gson = new Gson();
-		Cliente cliente = new Cliente();
+		Cliente cliente = new Cliente(ipDefault, puerto);
 
 		PaqueteUsuario pu = new PaqueteUsuario();
 		pu.setComando(Comando.INICIOSESION);
@@ -237,7 +237,7 @@ public class TestCliente {
 	@Test
 	public void testIniciarSesionFallido() {
 		Gson gson = new Gson();
-		Cliente cliente = new Cliente();
+		Cliente cliente = new Cliente(ipDefault, puerto);
 
 		PaqueteUsuario pu = new PaqueteUsuario();
 		pu.setComando(Comando.INICIOSESION);
@@ -267,11 +267,12 @@ public class TestCliente {
 			e.printStackTrace();
 		}
 	}
-	@Ignore
+	
+
 	@Test
 	public void testActualizarPersonaje() {
 		Gson gson = new Gson();
-		Cliente cliente = new Cliente();
+		Cliente cliente = new Cliente(ipDefault, puerto);
 
 		PaquetePersonaje pp = new PaquetePersonaje();
 		pp.setComando(Comando.ACTUALIZARPERSONAJE);
@@ -304,7 +305,7 @@ public class TestCliente {
 			cliente.getEntrada().close();
 			cliente.getSocket().close();
 
-			Assert.assertEquals(10000, paquetePersonaje.getSaludTope());
+			Assert.assertEquals(pp.getSaludTope(), paquetePersonaje.getSaludTope());
 		} catch (IOException | JsonSyntaxException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}

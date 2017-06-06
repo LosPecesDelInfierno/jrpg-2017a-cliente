@@ -18,7 +18,7 @@ import mensajeria.PaqueteUsuario;
 
 public class ServidorStub extends Thread {
 
-	private final int PUERTO = 9999;
+	private final int PUERTO = 9000;
 	private ServerSocket serverSocket;
 
 	public void run() {
@@ -138,7 +138,7 @@ public class ServidorStub extends Thread {
 						 * conectado.getSalida().writeObject(gson.toJson(
 						 * paquetePersonaje)); }
 						 */
-
+						salida.writeObject(gson.toJson(paquetePersonaje));
 						break;
 
 					default:

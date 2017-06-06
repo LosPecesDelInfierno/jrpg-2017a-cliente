@@ -2,4 +2,4 @@ language: java
 jdk:
   - oraclejdk7
   - openjdk7
-before_install: cd jrpg-2017a-dominio
+script: build.sh
