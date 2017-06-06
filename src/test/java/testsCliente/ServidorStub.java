@@ -45,7 +45,7 @@ public class ServidorStub extends Thread {
 
 				ObjectOutputStream salida = new ObjectOutputStream(cliente.getOutputStream());
 				ObjectInputStream entrada = new ObjectInputStream(cliente.getInputStream());
-				
+
 				Paquete paquete;
 				Paquete paqueteSv = new Paquete(null, 0);
 				PaqueteUsuario paqueteUsuario = new PaqueteUsuario();
@@ -60,31 +60,67 @@ public class ServidorStub extends Thread {
 					case Comando.REGISTRO:
 						// Paquete que le voy a enviar al usuario
 						paqueteSv.setComando(Comando.REGISTRO);
-						
-						//No envio a la BD la cadena leida ya que simulo registro o fallo del mismo
-						// paqueteUsuario = (PaqueteUsuario) (gson.fromJson(cadenaLeida, PaqueteUsuario.class)).clone();
-						
+
+						// No envio a la BD la cadena leida ya que simulo
+						// registro o fallo del mismo
+						// paqueteUsuario = (PaqueteUsuario)
+						// (gson.fromJson(cadenaLeida,
+						// PaqueteUsuario.class)).clone();
+
 						if (paquete.getMensaje().equals(Paquete.msjExito)) {
 							paqueteSv.setMensaje(Paquete.msjExito);
 							salida.writeObject(gson.toJson(paqueteSv));
-						// Si el usuario no se pudo registrar le envio un msj de fracaso
+							// Si el usuario no se pudo registrar le envio un
+							// msj de fracaso
 						} else {
 							paqueteSv.setMensaje(Paquete.msjFracaso);
 							salida.writeObject(gson.toJson(paqueteSv));
 						}
 						break;
-						
+
 					case Comando.CREACIONPJ:
-						
+
 						// Casteo el paquete personaje
 						paquetePersonaje = (PaquetePersonaje) (gson.fromJson(cadenaLeida, PaquetePersonaje.class));
-						
-						// No guardo guardo el personaje en ese usuario por ser una simulacion que no trabaja contra el server real.
-						//Servidor.getConector().registrarPersonaje(paquetePersonaje, paqueteUsuario);
-						
+
+						// No guardo guardo el personaje en ese usuario por ser
+						// una simulacion que no trabaja contra el server real.
+						// Servidor.getConector().registrarPersonaje(paquetePersonaje,
+						// paqueteUsuario);
+
 						// Le envio el id del personaje
 						salida.writeObject(gson.toJson(paquetePersonaje, paquetePersonaje.getClass()));
-						
+
+						break;
+
+					case Comando.INICIOSESION:
+						paqueteSv.setComando(Comando.INICIOSESION);
+
+						// Recibo el paquete usuario
+						paqueteUsuario = (PaqueteUsuario) (gson.fromJson(cadenaLeida, PaqueteUsuario.class));
+
+						// Pregunto si quiero el exito o fracaso en el logueo.
+						/*
+						 * Al no trabajar contra el server real no puedo
+						 * devolver un personaje creado anteriormente porque
+						 * nunca lo guarde.
+						 */
+						// Solo simulo el logueo.
+						if (paqueteUsuario.isInicioSesion()) {
+
+							paquetePersonaje = new PaquetePersonaje();
+							// paquetePersonaje =
+							// Servidor.getConector().getPersonaje(paqueteUsuario);
+							paquetePersonaje.setComando(Comando.INICIOSESION);
+							paquetePersonaje.setMensaje(Paquete.msjExito);
+							paquetePersonaje.setId(15);
+
+							salida.writeObject(gson.toJson(paquetePersonaje));
+
+						} else {
+							paqueteSv.setMensaje(Paquete.msjFracaso);
+							salida.writeObject(gson.toJson(paqueteSv));
+						}
 						break;
 					}
 					cadenaLeida = (String) entrada.readObject();

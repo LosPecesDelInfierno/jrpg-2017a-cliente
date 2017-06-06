@@ -31,17 +31,20 @@ public class TestCliente {
 		serverStub = new ServidorStub();
 		serverStub.start();
 	}
+
 	@After
 	public void finalizeAfterTests() {
 		serverStub.interrupt();
 	}
+
 	@Test
 	public void testConexionConElServidor() {
 		Gson gson = new Gson();
 
 		Cliente cliente = new Cliente(ipDefault, puerto);
 
-		// Pasado este punto la conexi�n entre el cliente y el servidor resulto exitosa
+		// Pasado este punto la conexi�n entre el cliente y el servidor resulto
+		// exitosa
 		Assert.assertEquals(1, 1);
 
 		try {
@@ -60,10 +63,10 @@ public class TestCliente {
 		}
 	}
 
-	//Simulo registro Exitoso
+	// Simulo registro Exitoso
 	@Test
 	public void testRegistro() {
-		
+
 		Gson gson = new Gson();
 
 		// Registro el usuario
@@ -71,9 +74,10 @@ public class TestCliente {
 		pu.setComando(Comando.REGISTRO);
 		pu.setUsername("nuevoUser");
 		pu.setPassword("test");
-		// Se setea el msje para que serverStub pregunte por qué simulacion tiene que actuar
+		// Se setea el msje para que serverStub pregunte por qué simulacion
+		// tiene que actuar
 		pu.setMensaje(Paquete.msjExito);
-		Cliente cliente = new Cliente(ipDefault,puerto);
+		Cliente cliente = new Cliente(ipDefault, puerto);
 
 		try {
 
@@ -98,6 +102,7 @@ public class TestCliente {
 			e.printStackTrace();
 		}
 	}
+
 	@Test
 	public void testRegistroFallido() {
 		Gson gson = new Gson();
@@ -107,7 +112,8 @@ public class TestCliente {
 		pu.setComando(Comando.REGISTRO);
 		pu.setUsername("nuevoUser");
 		pu.setPassword("test");
-		// Se setea el msje para que serverStub pregunte por qué simulacion tiene que actuar
+		// Se setea el msje para que serverStub pregunte por qué simulacion
+		// tiene que actuar
 		pu.setMensaje(Paquete.msjFracaso);
 
 		Cliente cliente = new Cliente();
@@ -147,9 +153,10 @@ public class TestCliente {
 		pu.setComando(Comando.REGISTRO);
 		pu.setUsername("nuevoUser");
 		pu.setPassword("test");
-		// Se setea el msje para que serverStub pregunte por qué simulacion tiene que actuar
+		// Se setea el msje para que serverStub pregunte por qué simulacion
+		// tiene que actuar
 		pu.setMensaje(Paquete.msjExito);
-		
+
 		// Registro de personaje
 		PaquetePersonaje pp = new PaquetePersonaje();
 		pp.setComando(Comando.CREACIONPJ);
@@ -192,9 +199,9 @@ public class TestCliente {
 			e.printStackTrace();
 		}
 	}
-@Ignore
+
 	@Test
-	public void testIniciarSesion() {
+	public void testIniciarSesionExitoso() {
 		Gson gson = new Gson();
 		Cliente cliente = new Cliente();
 
@@ -202,7 +209,7 @@ public class TestCliente {
 		pu.setComando(Comando.INICIOSESION);
 		pu.setUsername("nuevoUser");
 		pu.setPassword("test");
-
+		pu.setInicioSesion(true);
 		try {
 
 			// Envio el paquete de incio de sesion
@@ -221,12 +228,46 @@ public class TestCliente {
 			cliente.getEntrada().close();
 			cliente.getSocket().close();
 
-			Assert.assertEquals("PjTest", paquetePersonaje.getNombre());
+			Assert.assertEquals(15, paquetePersonaje.getId());
 		} catch (IOException | JsonSyntaxException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
-@Ignore
+
+	@Test
+	public void testIniciarSesionFallido() {
+		Gson gson = new Gson();
+		Cliente cliente = new Cliente();
+
+		PaqueteUsuario pu = new PaqueteUsuario();
+		pu.setComando(Comando.INICIOSESION);
+		pu.setUsername("nuevoUser");
+		pu.setPassword("test");
+		pu.setInicioSesion(false);
+		try {
+
+			// Envio el paquete de incio de sesion
+			cliente.getSalida().writeObject(gson.toJson(pu));
+
+			// Recibo el paquete con el personaje
+			PaquetePersonaje paquetePersonaje = (PaquetePersonaje) gson
+					.fromJson((String) cliente.getEntrada().readObject(), PaquetePersonaje.class);
+
+			// Cierro las conexiones
+			Paquete p = new Paquete();
+			p.setComando(Comando.DESCONECTAR);
+			p.setIp(cliente.getMiIp());
+			cliente.getSalida().writeObject(gson.toJson(p));
+			cliente.getSalida().close();
+			cliente.getEntrada().close();
+			cliente.getSocket().close();
+
+			Assert.assertTrue(!(Integer.valueOf(paquetePersonaje.getId()).equals(Integer.valueOf(15))));
+		} catch (IOException | JsonSyntaxException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	@Ignore
 	@Test
 	public void testActualizarPersonaje() {
 		Gson gson = new Gson();
