@@ -71,7 +71,7 @@ public class TestCliente {
 		pu.setComando(Comando.REGISTRO);
 		pu.setUsername("nuevoUser");
 		pu.setPassword("test");
-
+		pu.setMensaje(Paquete.msjExito);
 		Cliente cliente = new Cliente(ipDefault,puerto);
 
 		try {
@@ -97,7 +97,6 @@ public class TestCliente {
 			e.printStackTrace();
 		}
 	}
-@Ignore
 	@Test
 	public void testRegistroFallido() {
 		Gson gson = new Gson();
@@ -107,6 +106,7 @@ public class TestCliente {
 		pu.setComando(Comando.REGISTRO);
 		pu.setUsername("nuevoUser");
 		pu.setPassword("test");
+		pu.setMensaje(Paquete.msjFracaso);
 
 		Cliente cliente = new Cliente();
 
@@ -115,7 +115,7 @@ public class TestCliente {
 			// Envio el paquete para registrarme
 			cliente.getSalida().writeObject(gson.toJson(pu));
 
-			// Recibo la respuesta del servidor
+			// Recibo la respuesta simulada del servidor
 			Paquete resultado = (Paquete) gson.fromJson((String) cliente.getEntrada().readObject(), Paquete.class);
 
 			// Cierro las conexiones

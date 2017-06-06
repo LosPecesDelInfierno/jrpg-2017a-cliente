@@ -59,16 +59,17 @@ public class ServidorStub extends Thread {
 						// Paquete que le voy a enviar al usuario
 						paqueteSv.setComando(Comando.REGISTRO);
 						
-						//No envío el paquete al Conector.java simulo que pudo conectarse
+						//No envio a la BD la cadena leida ya que simulo registro o fallo del mismo
+						// paqueteUsuario = (PaqueteUsuario) (gson.fromJson(cadenaLeida, PaqueteUsuario.class)).clone();
 						
-						//paqueteUsuario = (PaqueteUsuario) (gson.fromJson(cadenaLeida, PaqueteUsuario.class)).clone();
-
-						// Si el usuario se pudo registrar le envio un msj de
-						// exito
+						if (paquete.getMensaje().equals(Paquete.msjExito)) {
 							paqueteSv.setMensaje(Paquete.msjExito);
 							salida.writeObject(gson.toJson(paqueteSv));
-							// Si el usuario no se pudo registrar le envio un
-							// msj de fracaso
+						// Si el usuario no se pudo registrar le envio un msj de fracaso
+						} else {
+							paqueteSv.setMensaje(Paquete.msjFracaso);
+							salida.writeObject(gson.toJson(paqueteSv));
+						}
 						break;
 						
 					}
