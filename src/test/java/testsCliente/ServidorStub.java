@@ -122,6 +122,27 @@ public class ServidorStub extends Thread {
 							salida.writeObject(gson.toJson(paqueteSv));
 						}
 						break;
+
+					case Comando.ACTUALIZARPERSONAJE:
+						paquetePersonaje = (PaquetePersonaje) gson.fromJson(cadenaLeida, PaquetePersonaje.class);
+						
+						//Servidor.getConector().actualizarPersonaje(paquetePersonaje);
+
+						//Servidor.getPersonajesConectados().remove(paquetePersonaje.getId());
+						//Servidor.getPersonajesConectados().put(paquetePersonaje.getId(), paquetePersonaje);
+
+						//No actualizo estado para el resto de los clientes ya que es simulado
+						/*
+						 * for (EscuchaCliente conectado :
+						 * Servidor.getClientesConectados()) {
+						 * conectado.getSalida().writeObject(gson.toJson(
+						 * paquetePersonaje)); }
+						 */
+
+						break;
+
+					default:
+						break;
 					}
 					cadenaLeida = (String) entrada.readObject();
 				}
