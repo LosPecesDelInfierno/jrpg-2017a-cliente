@@ -2,5 +2,5 @@ language: java
 jdk:
   - oraclejdk7
   - openjdk7
- before_install: 
- - wget -P $TRAVIS_BUILD_DIR/ https://github.com/LosPecesDelInfierno/jrpg-2017a-cliente/jrpg-2017a-dominio.jar
+before_install: 
+  - wget -P $TRAVIS_BUILD_DIR/ https://github.com/LosPecesDelInfierno/jrpg-2017a-cliente/blob/TestBranch/jrpg-2017a-dominio.jar
