@@ -2,4 +2,4 @@ language: java
 jdk:
   - oraclejdk7
   - openjdk7
-script: build.sh
+ before_install: - wget -P $TRAVIS_BUILD_DIR/ https://github.com/LosPecesDelInfierno/jrpg-2017a-dominio
