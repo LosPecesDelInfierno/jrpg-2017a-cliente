@@ -17,6 +17,7 @@ import dominio.Hechicero;
 import dominio.Humano;
 import dominio.Orco;
 import dominio.Personaje;
+import dominio.Item;
 import interfaz.EstadoDePersonaje;
 import interfaz.MenuBatalla;
 import interfaz.MenuInfoPersonaje;
@@ -158,7 +159,7 @@ public class EstadoBatalla extends Estado {
 						menuBatalla.setHabilitado(false);
 					}
 				} else if(haySpellSeleccionada && !seRealizoAccion){
-					JOptionPane.showMessageDialog(null, "No posees la energ�a suficiente para realizar esta habilidad.");
+					JOptionPane.showMessageDialog(null, "No posees la energía suficiente para realizar esta habilidad.");
 				}
 
 				juego.getHandlerMouse().setNuevoClick(false);
@@ -216,6 +217,10 @@ public class EstadoBatalla extends Estado {
 			personaje = new Elfo(nombre, salud, energia, fuerza, destreza, inteligencia, casta,
 					experiencia, nivel, id);
 		}
+		
+		for(Item item : paquetePersonaje.getInventario()) {
+			personaje.addItemInventario(item);
+		}
 
 		nombre = paqueteEnemigo.getNombre();
 		salud = paqueteEnemigo.getSaludTope();
@@ -246,6 +251,10 @@ public class EstadoBatalla extends Estado {
 			enemigo = new Elfo(nombre, salud, energia, fuerza, destreza, inteligencia, casta,
 					experiencia, nivel, id);
 		}
+		
+		for(Item item : paqueteEnemigo.getInventario()) {
+			enemigo.addItemInventario(item);
+		}
 	}
 
 	public void enviarAtaque(PaqueteAtacar paqueteAtacar) {
@@ -268,6 +277,8 @@ public class EstadoBatalla extends Estado {
 			paquetePersonaje.setDestreza(personaje.getDestreza());
 			paquetePersonaje.setFuerza(personaje.getFuerza());
 			paquetePersonaje.setInteligencia(personaje.getInteligencia());
+			// Acá entra cuando gana
+			paquetePersonaje.setGanoBatalla(true);
 			
 			paqueteEnemigo.setSaludTope(enemigo.getSaludTope());
 			paqueteEnemigo.setEnergiaTope(enemigo.getEnergiaTope());
@@ -283,7 +294,7 @@ public class EstadoBatalla extends Estado {
 			juego.getCliente().getSalida().writeObject(gson.toJson(paquetePersonaje));
 			juego.getCliente().getSalida().writeObject(gson.toJson(paqueteEnemigo));
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Fallo la conexi�n con el servidor.");
+			JOptionPane.showMessageDialog(null, "Fallo la conexión con el servidor.");
 			e.printStackTrace();
 		}
 	}

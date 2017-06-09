@@ -4,11 +4,15 @@ import java.io.IOException;
 
 import javax.swing.JTextArea;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.sun.org.apache.xerces.internal.parsers.SAXParser;
 
 import cliente.Cliente;
 import mensajeria.Comando;
@@ -18,15 +22,29 @@ import mensajeria.PaqueteUsuario;
 
 public class TestCliente {
 
-	/// Para realizar los test es necesario iniciar el servidor
+	private final String ipDefault = "127.0.0.1";
+	private final int puerto = 9000;
+	private ServidorStub serverStub;
+
+	@Before
+	public void setUpBeforeTests() {
+		serverStub = new ServidorStub();
+		serverStub.start();
+	}
+
+	@After
+	public void finalizeAfterTests() {
+		serverStub.interrupt();
+	}
 
 	@Test
 	public void testConexionConElServidor() {
 		Gson gson = new Gson();
 
-		Cliente cliente = new Cliente();
+		Cliente cliente = new Cliente(ipDefault, puerto);
 
-		// Pasado este punto la conexi�n entre el cliente y el servidor resulto exitosa
+		// Pasado este punto la conexi�n entre el cliente y el servidor resulto
+		// exitosa
 		Assert.assertEquals(1, 1);
 
 		try {
@@ -45,8 +63,10 @@ public class TestCliente {
 		}
 	}
 
+	// Simulo registro Exitoso
 	@Test
 	public void testRegistro() {
+
 		Gson gson = new Gson();
 
 		// Registro el usuario
@@ -54,15 +74,17 @@ public class TestCliente {
 		pu.setComando(Comando.REGISTRO);
 		pu.setUsername("nuevoUser");
 		pu.setPassword("test");
-
-		Cliente cliente = new Cliente();
+		// Se setea el msje para que serverStub pregunte por qué simulacion
+		// tiene que actuar
+		pu.setMensaje(Paquete.msjExito);
+		Cliente cliente = new Cliente(ipDefault, puerto);
 
 		try {
 
 			// Envio el paquete para registrarme
 			cliente.getSalida().writeObject(gson.toJson(pu));
 
-			// Recibo la respuesta del servidor
+			// Recibo la respuesta simulada del servidorStub
 			Paquete resultado = (Paquete) gson.fromJson((String) cliente.getEntrada().readObject(), Paquete.class);
 
 			// Cierro las conexiones
@@ -90,15 +112,18 @@ public class TestCliente {
 		pu.setComando(Comando.REGISTRO);
 		pu.setUsername("nuevoUser");
 		pu.setPassword("test");
+		// Se setea el msje para que serverStub pregunte por qué simulacion
+		// tiene que actuar
+		pu.setMensaje(Paquete.msjFracaso);
 
-		Cliente cliente = new Cliente();
+		Cliente cliente = new Cliente(ipDefault, puerto);
 
 		try {
 
 			// Envio el paquete para registrarme
 			cliente.getSalida().writeObject(gson.toJson(pu));
 
-			// Recibo la respuesta del servidor
+			// Recibo la respuesta simulada del servidor
 			Paquete resultado = (Paquete) gson.fromJson((String) cliente.getEntrada().readObject(), Paquete.class);
 
 			// Cierro las conexiones
@@ -121,13 +146,16 @@ public class TestCliente {
 	public void testRegistrarPersonaje() {
 		Gson gson = new Gson();
 
-		Cliente cliente = new Cliente();
+		Cliente cliente = new Cliente(ipDefault, puerto);
 
 		// Registro de usuario
 		PaqueteUsuario pu = new PaqueteUsuario();
 		pu.setComando(Comando.REGISTRO);
 		pu.setUsername("nuevoUser");
 		pu.setPassword("test");
+		// Se setea el msje para que serverStub pregunte por qué simulacion
+		// tiene que actuar
+		pu.setMensaje(Paquete.msjExito);
 
 		// Registro de personaje
 		PaquetePersonaje pp = new PaquetePersonaje();
@@ -148,7 +176,7 @@ public class TestCliente {
 			// Envio el paquete de registro de usuario
 			cliente.getSalida().writeObject(gson.toJson(pu));
 
-			// Recibo la respuesta del servidor
+			// Recibo la respuesta simulada del servidor
 			Paquete paquete = (Paquete) gson.fromJson((String) cliente.getEntrada().readObject(), Paquete.class);
 
 			// Envio el paquete de registro de personaje
@@ -173,15 +201,15 @@ public class TestCliente {
 	}
 
 	@Test
-	public void testIniciarSesion() {
+	public void testIniciarSesionExitoso() {
 		Gson gson = new Gson();
-		Cliente cliente = new Cliente();
+		Cliente cliente = new Cliente(ipDefault, puerto);
 
 		PaqueteUsuario pu = new PaqueteUsuario();
 		pu.setComando(Comando.INICIOSESION);
 		pu.setUsername("nuevoUser");
 		pu.setPassword("test");
-
+		pu.setInicioSesion(true);
 		try {
 
 			// Envio el paquete de incio de sesion
@@ -200,16 +228,51 @@ public class TestCliente {
 			cliente.getEntrada().close();
 			cliente.getSocket().close();
 
-			Assert.assertEquals("PjTest", paquetePersonaje.getNombre());
+			Assert.assertEquals(15, paquetePersonaje.getId());
 		} catch (IOException | JsonSyntaxException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Test
+	public void testIniciarSesionFallido() {
+		Gson gson = new Gson();
+		Cliente cliente = new Cliente(ipDefault, puerto);
+
+		PaqueteUsuario pu = new PaqueteUsuario();
+		pu.setComando(Comando.INICIOSESION);
+		pu.setUsername("nuevoUser");
+		pu.setPassword("test");
+		pu.setInicioSesion(false);
+		try {
+
+			// Envio el paquete de incio de sesion
+			cliente.getSalida().writeObject(gson.toJson(pu));
+
+			// Recibo el paquete con el personaje
+			PaquetePersonaje paquetePersonaje = (PaquetePersonaje) gson
+					.fromJson((String) cliente.getEntrada().readObject(), PaquetePersonaje.class);
+
+			// Cierro las conexiones
+			Paquete p = new Paquete();
+			p.setComando(Comando.DESCONECTAR);
+			p.setIp(cliente.getMiIp());
+			cliente.getSalida().writeObject(gson.toJson(p));
+			cliente.getSalida().close();
+			cliente.getEntrada().close();
+			cliente.getSocket().close();
+
+			Assert.assertTrue(!(Integer.valueOf(paquetePersonaje.getId()).equals(Integer.valueOf(15))));
+		} catch (IOException | JsonSyntaxException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+
+	@Test
 	public void testActualizarPersonaje() {
 		Gson gson = new Gson();
-		Cliente cliente = new Cliente();
+		Cliente cliente = new Cliente(ipDefault, puerto);
 
 		PaquetePersonaje pp = new PaquetePersonaje();
 		pp.setComando(Comando.ACTUALIZARPERSONAJE);
@@ -242,7 +305,7 @@ public class TestCliente {
 			cliente.getEntrada().close();
 			cliente.getSocket().close();
 
-			Assert.assertEquals(10000, paquetePersonaje.getSaludTope());
+			Assert.assertEquals(pp.getSaludTope(), paquetePersonaje.getSaludTope());
 		} catch (IOException | JsonSyntaxException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
