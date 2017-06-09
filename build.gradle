@@ -11,7 +11,35 @@ sourceCompatibility = 1.7
 version = '0.1'
 test.ignoreFailures = true
 
-defaultTasks 'clean', 'compileJava', 'test', 'checkstyleMain', 'pmd', 'findbugsMain', 'jacocoTestReport'
+defaultTasks 'clean', 'compileJava', 'fatJar', 'test', 'checkstyleMain', 'pmd', 'findbugsMain', 'jacocoTestReport'
+/*
+allprojects {
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+    }
+}*/
+compileJava {
+    //options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
+compileTestJava {
+    //options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
+sourceSets {
+    main {
+        java {
+            srcDirs 'src/main/resources'
+            srcDirs 'src/main/java'
+        }
+        resources {
+            srcDirs 'recursos'
+            
+        }
+    }
+}
 
 repositories {
 	mavenCentral()
@@ -25,6 +53,8 @@ dependencies {
     compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
     testCompile group: 'junit', name: 'junit', version: '4.+'
     pmdConf group: 'pmd', name: 'pmd', version: '4.3'
+	compile files('gson-2.8.0.jar')
+	compile files('jrpg-2017a-dominio.jar')
 }
 
 /*buildscript {
@@ -38,14 +68,14 @@ dependencies {
 
 // Tareas
 
-test {
+/*test {
     SecurityManager manager = System.getSecurityManager();
     if (manager == null) {
         println("there is no security manager!");
     }
 
     jvmArgs "-Djava.security.manager=java.lang.SecurityManager"
-}
+}*/
 
 checkstyle {
 	configFile = new File(rootDir, "src/test/resources/sun_checks.xml")
@@ -87,6 +117,22 @@ task pmd (dependsOn: compileJava) << {
             }
         }
     }
+}
+
+task fatJar(type: Jar) {
+	manifest { 
+    	attributes "Main-Class": "frames.MenuInicio"
+  	}
+
+    baseName = 'jrpg-cliente'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    from('src/main/java/frames') {
+    	include '*.png'
+    	include '*.jpg'
+    	into 'frames'
+  	}
+ 	
+    with jar
 }
 
 findbugs {
