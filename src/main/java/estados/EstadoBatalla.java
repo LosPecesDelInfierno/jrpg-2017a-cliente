@@ -17,6 +17,7 @@ import dominio.Hechicero;
 import dominio.Humano;
 import dominio.Orco;
 import dominio.Personaje;
+import dominio.Item;
 import interfaz.EstadoDePersonaje;
 import interfaz.MenuBatalla;
 import interfaz.MenuInfoPersonaje;
@@ -216,6 +217,10 @@ public class EstadoBatalla extends Estado {
 			personaje = new Elfo(nombre, salud, energia, fuerza, destreza, inteligencia, casta,
 					experiencia, nivel, id);
 		}
+		
+		for(Item item : paquetePersonaje.getInventario()) {
+			personaje.addItemInventario(item);
+		}
 
 		nombre = paqueteEnemigo.getNombre();
 		salud = paqueteEnemigo.getSaludTope();
@@ -245,6 +250,10 @@ public class EstadoBatalla extends Estado {
 		} else if (paqueteEnemigo.getRaza().equals("Elfo")) {
 			enemigo = new Elfo(nombre, salud, energia, fuerza, destreza, inteligencia, casta,
 					experiencia, nivel, id);
+		}
+		
+		for(Item item : paqueteEnemigo.getInventario()) {
+			enemigo.addItemInventario(item);
 		}
 	}
 
