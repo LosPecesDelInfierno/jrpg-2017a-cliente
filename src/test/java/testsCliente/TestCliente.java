@@ -5,8 +5,10 @@ import java.io.IOException;
 import javax.swing.JTextArea;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -24,16 +26,16 @@ public class TestCliente {
 
 	private final String ipDefault = "127.0.0.1";
 	private final int puerto = 9000;
-	private ServidorStub serverStub;
+	private static ServidorStub serverStub;
 
-	@Before
-	public void setUpBeforeTests() {
+	@BeforeClass	
+	public static void setUpBeforeTests() {
 		serverStub = new ServidorStub();
 		serverStub.start();
 	}
 
-	@After
-	public void finalizeAfterTests() {
+	@AfterClass
+	public static void finalizeAfterTests() {
 		serverStub.interrupt();
 	}
 
