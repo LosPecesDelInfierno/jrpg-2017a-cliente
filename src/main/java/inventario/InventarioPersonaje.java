@@ -57,14 +57,14 @@ public class InventarioPersonaje extends JFrame {
 		ImageIcon botas = new ImageIcon("Imagenes/botasDaedricas.png");
 		ImageIcon guantes = new ImageIcon("Imagenes/guantesDaedrios.png");
 		
-		String descripcionArmadura = "Defensa +50, Agilidad -5";
-		String descripcionCasco = "Defenza +10";
-		String descripcionArma = "Fuerza +75, destreza -3";
-		String descripcionEscudo = "Defenza +25";
-		String descripcionBotas = "Defensa +5, Destreza +20";
-		String descripcionGuantes = "Defenza +5";
+		final String descripcionArmadura = "Defensa +50, Agilidad -5";
+		final String descripcionCasco = "Defenza +10";
+		final String descripcionArma = "Fuerza +75, destreza -3";
+		final String descripcionEscudo = "Defenza +25";
+		final String descripcionBotas = "Defensa +5, Destreza +20";
+		final String descripcionGuantes = "Defenza +5";
 		
-		JLabel labelArmadura = new JLabel(armadura);		
+		final JLabel labelArmadura = new JLabel(armadura);		
 		labelArmadura.setHorizontalAlignment(SwingConstants.CENTER);
 		labelArmadura.setBounds(154, 128, 104, 205);
 		labelArmadura.addMouseListener(new MouseAdapter() {			
@@ -75,7 +75,7 @@ public class InventarioPersonaje extends JFrame {
 		});	
 		contentPane.add(labelArmadura);
 		
-		JLabel labelArma = new JLabel(arma);		
+		final JLabel labelArma = new JLabel(arma);		
 		labelArma.setHorizontalAlignment(SwingConstants.CENTER);
 		labelArma.setBounds(25, 109, 82, 134);
 		labelArma.addMouseListener(new MouseAdapter() {			
@@ -86,7 +86,7 @@ public class InventarioPersonaje extends JFrame {
 		});
 		contentPane.add(labelArma);
 		
-		JLabel labelEscudo = new JLabel(escudo);		
+		final JLabel labelEscudo = new JLabel(escudo);		
 		labelEscudo.setHorizontalAlignment(SwingConstants.CENTER);
 		labelEscudo.setBounds(299, 109, 88, 134);
 		labelEscudo.addMouseListener(new MouseAdapter() {			
@@ -97,7 +97,7 @@ public class InventarioPersonaje extends JFrame {
 		});
 		contentPane.add(labelEscudo);
 		
-		JLabel labelCasco = new JLabel(casco);
+		final JLabel labelCasco = new JLabel(casco);
 		labelCasco.setHorizontalAlignment(SwingConstants.CENTER);
 		labelCasco.setBounds(154, 11, 104, 92);
 		labelCasco.addMouseListener(new MouseAdapter() {			
@@ -108,7 +108,7 @@ public class InventarioPersonaje extends JFrame {
 		});
 		contentPane.add(labelCasco);
 		
-		JLabel labelBotas = new JLabel(botas);
+		final JLabel labelBotas = new JLabel(botas);
 		labelBotas.setHorizontalAlignment(SwingConstants.CENTER);
 		labelBotas.addMouseListener(new MouseAdapter() {			
 			@Override
@@ -119,7 +119,7 @@ public class InventarioPersonaje extends JFrame {
 		labelBotas.setBounds(299, 254, 88, 92);
 		contentPane.add(labelBotas);
 		
-		JLabel labelGuantes = new JLabel(guantes);		
+		final JLabel labelGuantes = new JLabel(guantes);		
 		labelGuantes.setHorizontalAlignment(SwingConstants.CENTER);
 		labelGuantes.setBounds(25, 254, 82, 92);
 		labelGuantes.addMouseListener(new MouseAdapter() {			
@@ -130,7 +130,7 @@ public class InventarioPersonaje extends JFrame {
 		});
 		contentPane.add(labelGuantes);
 		
-		JLabel labelFondo = new JLabel(new ImageIcon("./Imagenes/fondoInventario.jpg"));
+		final JLabel labelFondo = new JLabel(new ImageIcon("./Imagenes/fondoInventario.jpg"));
 		labelFondo.setHorizontalAlignment(SwingConstants.CENTER);
 		labelFondo.setBounds(0, 0, 400, 360);
 		contentPane.add(labelFondo);
