@@ -66,11 +66,11 @@ public class EstadoBatalla extends Estado {
 		
 		miniaturaEnemigo = Recursos.personaje.get(enemigo.getNombreRaza()).get(5)[0];
 		miniaturaPersonaje = Recursos.personaje.get(personaje.getNombreRaza()).get(5)[0];
-	
+
 		paqueteFinalizarBatalla = new PaqueteFinalizarBatalla();
 		paqueteFinalizarBatalla.setId(personaje.getIdPersonaje());
 		paqueteFinalizarBatalla.setIdEnemigo(enemigo.getIdPersonaje());
-		
+
 		// por defecto batalla perdida
 		juego.getEstadoJuego().setHaySolicitud(true, juego.getPersonaje(), MenuInfoPersonaje.menuPerderBatalla);
 		
@@ -221,7 +221,9 @@ public class EstadoBatalla extends Estado {
 		for(Item item : paquetePersonaje.getInventario()) {
 			personaje.addItemInventario(item);
 		}
-
+		
+		personaje.aplicarEfectoItems();
+		
 		nombre = paqueteEnemigo.getNombre();
 		salud = paqueteEnemigo.getSaludTope();
 		energia = paqueteEnemigo.getEnergiaTope();
@@ -255,6 +257,8 @@ public class EstadoBatalla extends Estado {
 		for(Item item : paqueteEnemigo.getInventario()) {
 			enemigo.addItemInventario(item);
 		}
+		enemigo.aplicarEfectoItems();
+		
 	}
 
 	public void enviarAtaque(PaqueteAtacar paqueteAtacar) {
