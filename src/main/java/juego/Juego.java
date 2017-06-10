@@ -108,7 +108,7 @@ public class Juego implements Runnable {
 
 		// Fin de graficado de imagenes
 
-		bs.show(); // Hace visible el próximo buffer disponible
+		bs.show(); // Hace visible el prï¿½ximo buffer disponible
 		g.dispose();
 	}
 
@@ -220,5 +220,6 @@ public class Juego implements Runnable {
 	
 	public void actualizarPersonaje() {
 		paquetePersonaje = (PaquetePersonaje) (escuchaMensajes.getPersonajesConectados().get(paquetePersonaje.getId()).clone());
+//		cliente.set
 	}
 }

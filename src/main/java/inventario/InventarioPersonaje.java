@@ -17,6 +17,7 @@ import java.awt.Component;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import java.awt.event.MouseMotionAdapter;
+import java.util.Collection;
 import java.util.List;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
@@ -56,7 +57,7 @@ public class InventarioPersonaje extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		List<Item>items = personaje.getInventario();
+		Collection<Item>items = personaje.getInventario();
 		
 		for (Item item : items) {
 			String pathImagen = pathImagenes + item.getFoto();
