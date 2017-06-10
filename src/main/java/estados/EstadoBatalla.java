@@ -36,8 +36,6 @@ public class EstadoBatalla extends Estado {
 	private Personaje personaje;
 	private Personaje enemigo;
 	private int[] posMouse;
-	private PaquetePersonaje personajeOriginal;
-	private PaquetePersonaje enemigoOriginal;
 	private PaquetePersonaje paquetePersonaje;
 	private PaquetePersonaje paqueteEnemigo;
 	private PaqueteAtacar paqueteAtacar;
@@ -61,8 +59,6 @@ public class EstadoBatalla extends Estado {
 
 		paquetePersonaje = juego.getEscuchaMensajes().getPersonajesConectados().get(paqueteBatalla.getId());
 		paqueteEnemigo = juego.getEscuchaMensajes().getPersonajesConectados().get(paqueteBatalla.getIdEnemigo());
-		personajeOriginal = (PaquetePersonaje)paquetePersonaje.clone();
-		enemigoOriginal = (PaquetePersonaje)paqueteEnemigo.clone();
 		
 		crearPersonajes();
 		
@@ -225,7 +221,7 @@ public class EstadoBatalla extends Estado {
 		for(Item item : paquetePersonaje.getInventario()) {
 			personaje.addItemInventario(item);
 		}
-		personaje.aplicarEfectoItems();
+		//personaje.aplicarEfectoItems();
 		
 		nombre = paqueteEnemigo.getNombre();
 		salud = paqueteEnemigo.getSaludTope();
@@ -260,7 +256,7 @@ public class EstadoBatalla extends Estado {
 		for(Item item : paqueteEnemigo.getInventario()) {
 			enemigo.addItemInventario(item);
 		}
-		enemigo.aplicarEfectoItems();
+		//enemigo.aplicarEfectoItems();
 
 	}
 
@@ -277,40 +273,29 @@ public class EstadoBatalla extends Estado {
 		try {
 			juego.getCliente().getSalida().writeObject(gson.toJson(paqueteFinalizarBatalla));
 			
-//			paquetePersonaje.setSaludTope(personaje.getSaludTope());
-//			paquetePersonaje.setEnergiaTope(personaje.getEnergiaTope());
-//			paquetePersonaje.setNivel(personaje.getNivel());
-//			paquetePersonaje.setExperiencia(personaje.getExperiencia());
-//			paquetePersonaje.setDestreza(personaje.getDestreza());
-//			paquetePersonaje.setFuerza(personaje.getFuerza());
-//			paquetePersonaje.setInteligencia(personaje.getInteligencia());
-			// Acá entra cuando gana
-//			paquetePersonaje.setGanoBatalla(true);
+			paquetePersonaje.setSaludTope(personaje.getSaludTope());
+			paquetePersonaje.setEnergiaTope(personaje.getEnergiaTope());
+			paquetePersonaje.setNivel(personaje.getNivel());
+			paquetePersonaje.setExperiencia(personaje.getExperiencia());
+			paquetePersonaje.setDestreza(personaje.getDestreza());
+			paquetePersonaje.setFuerza(personaje.getFuerza());
+			paquetePersonaje.setInteligencia(personaje.getInteligencia());
+			paquetePersonaje.setGanoBatalla(true);
 			
-//			paqueteEnemigo.setSaludTope(enemigo.getSaludTope());
-//			paqueteEnemigo.setEnergiaTope(enemigo.getEnergiaTope());
-//			paqueteEnemigo.setNivel(enemigo.getNivel());
-//			paqueteEnemigo.setExperiencia(enemigo.getExperiencia());
-//			paqueteEnemigo.setDestreza(enemigo.getDestreza());
-//			paqueteEnemigo.setFuerza(enemigo.getFuerza());
-//			paqueteEnemigo.setInteligencia(enemigo.getInteligencia());
+			paqueteEnemigo.setSaludTope(enemigo.getSaludTope());
+			paqueteEnemigo.setEnergiaTope(enemigo.getEnergiaTope());
+			paqueteEnemigo.setNivel(enemigo.getNivel());
+			paqueteEnemigo.setExperiencia(enemigo.getExperiencia());
+			paqueteEnemigo.setDestreza(enemigo.getDestreza());
+			paqueteEnemigo.setFuerza(enemigo.getFuerza());
+			paqueteEnemigo.setInteligencia(enemigo.getInteligencia());
 			
-//			paqueteEnemigo.setGanoBatalla(false);
-//			paquetePersonaje.setComando(Comando.ACTUALIZARPERSONAJE);
-//			paqueteEnemigo.setComando(Comando.ACTUALIZARPERSONAJE);
+			paqueteEnemigo.setGanoBatalla(false);
+			paquetePersonaje.setComando(Comando.ACTUALIZARPERSONAJE);
+			paqueteEnemigo.setComando(Comando.ACTUALIZARPERSONAJE);
 			
-			personajeOriginal.setGanoBatalla(true);
-			personajeOriginal.setNivel(personaje.getNivel());
-			personajeOriginal.setExperiencia(personaje.getExperiencia());
-			personajeOriginal.setComando(Comando.ACTUALIZARPERSONAJE);
-			
-			enemigoOriginal.setGanoBatalla(false);
-			enemigoOriginal.setComando(Comando.ACTUALIZARPERSONAJE);
-			enemigoOriginal.setNivel(personaje.getNivel());
-			enemigoOriginal.setExperiencia(personaje.getExperiencia());
-			
-			juego.getCliente().getSalida().writeObject(gson.toJson(personajeOriginal));
-			juego.getCliente().getSalida().writeObject(gson.toJson(enemigoOriginal));
+			juego.getCliente().getSalida().writeObject(gson.toJson(paquetePersonaje));
+			juego.getCliente().getSalida().writeObject(gson.toJson(paqueteEnemigo));
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "Fallo la conexión con el servidor.");
 			e.printStackTrace();
