@@ -27,7 +27,7 @@ import mensajeria.PaquetePersonaje;
 public class InventarioPersonaje extends JFrame {
 
 	private JPanel contentPane;
-
+	private String pathImagenes = "recursos/";
 	/**
 	 * Launch the application.
 	 */
@@ -59,10 +59,12 @@ public class InventarioPersonaje extends JFrame {
 		List<Item>items = personaje.getInventario();
 		
 		for (Item item : items) {
+			String pathImagen = pathImagenes + item.getFoto();
+			String descripcionItem = item.getDescripcionItem();
 			switch (item.getIdTipoItem()) {
 			case TipoItem.ARMA:
-				ImageIcon arma = new ImageIcon(item.getFoto());
-				final String descripcionArma = item.getDescripcionItem();
+				ImageIcon arma = new ImageIcon(pathImagen);
+				final String descripcionArma = descripcionItem;
 				final JLabel labelArma = new JLabel(arma);		
 				labelArma.setHorizontalAlignment(SwingConstants.CENTER);
 				labelArma.setBounds(25, 109, 82, 134);
@@ -75,8 +77,8 @@ public class InventarioPersonaje extends JFrame {
 				contentPane.add(labelArma);
 				break;
 			case TipoItem.ARMADURA:
-				ImageIcon armadura = new ImageIcon(item.getFoto());
-				final String descripcionArmadura = item.getDescripcionItem();
+				ImageIcon armadura = new ImageIcon(pathImagen);
+				final String descripcionArmadura = descripcionItem;
 				final JLabel labelArmadura = new JLabel(armadura);		
 				labelArmadura.setHorizontalAlignment(SwingConstants.CENTER);
 				labelArmadura.setBounds(154, 128, 104, 205);
@@ -90,8 +92,8 @@ public class InventarioPersonaje extends JFrame {
 				break;
 			
 			case TipoItem.BOTAS:
-				ImageIcon botas = new ImageIcon(item.getFoto());
-				final String descripcionBotas = item.getDescripcionItem();
+				ImageIcon botas = new ImageIcon(pathImagen);
+				final String descripcionBotas = descripcionItem;
 				final JLabel labelBotas = new JLabel(botas);
 				labelBotas.setHorizontalAlignment(SwingConstants.CENTER);
 				labelBotas.addMouseListener(new MouseAdapter() {			
@@ -105,8 +107,8 @@ public class InventarioPersonaje extends JFrame {
 				break;
 				
 			case TipoItem.CASCO:
-				ImageIcon casco = new ImageIcon(item.getFoto());
-				final String descripcionCasco = item.getDescripcionItem();
+				ImageIcon casco = new ImageIcon(pathImagen);
+				final String descripcionCasco = descripcionItem;
 				final JLabel labelCasco = new JLabel(casco);
 				labelCasco.setHorizontalAlignment(SwingConstants.CENTER);
 				labelCasco.setBounds(154, 11, 104, 92);
@@ -120,8 +122,8 @@ public class InventarioPersonaje extends JFrame {
 				break;
 				
 			case TipoItem.ESCUDO:
-				ImageIcon escudo = new ImageIcon(item.getFoto());
-				final String descripcionEscudo = item.getDescripcionItem();;
+				ImageIcon escudo = new ImageIcon(pathImagen);
+				final String descripcionEscudo = descripcionItem;
 				final JLabel labelEscudo = new JLabel(escudo);		
 				labelEscudo.setHorizontalAlignment(SwingConstants.CENTER);
 				labelEscudo.setBounds(299, 109, 88, 134);
@@ -135,8 +137,8 @@ public class InventarioPersonaje extends JFrame {
 				break;
 				
 			case TipoItem.GUANTES:
-				ImageIcon guantes = new ImageIcon(item.getFoto());
-				final String descripcionGuantes = item.getDescripcionItem();
+				ImageIcon guantes = new ImageIcon(pathImagen);
+				final String descripcionGuantes = descripcionItem;
 				final JLabel labelGuantes = new JLabel(guantes);		
 				labelGuantes.setHorizontalAlignment(SwingConstants.CENTER);
 				labelGuantes.setBounds(25, 254, 82, 92);
