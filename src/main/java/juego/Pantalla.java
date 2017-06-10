@@ -1,11 +1,14 @@
 package juego;
 
 import java.awt.Canvas;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.font.FontRenderContext;
@@ -22,6 +25,7 @@ import cliente.Cliente;
 import frames.MenuJugar;
 import mensajeria.Comando;
 import mensajeria.Paquete;
+import inventario.InventarioPersonaje;
 
 public class Pantalla {
 
@@ -62,6 +66,15 @@ public class Pantalla {
 		pantalla.setLocationRelativeTo(null);
 		pantalla.setVisible(false);
 
+		pantalla.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_I) {
+					InventarioPersonaje inventario = new InventarioPersonaje(cliente.getPaquetePersonaje());
+					inventario.setVisible(true);
+				}
+			}
+		});
+		
 		canvas = new Canvas();
 		canvas.setPreferredSize(new Dimension(ANCHO, ALTO));
 		canvas.setMaximumSize(new Dimension(ANCHO, ALTO));
