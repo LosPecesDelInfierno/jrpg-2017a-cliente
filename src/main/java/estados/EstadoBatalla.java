@@ -222,8 +222,6 @@ public class EstadoBatalla extends Estado {
 			personaje.addItemInventario(item);
 		}
 		
-		personaje.aplicarEfectoItems();
-		
 		nombre = paqueteEnemigo.getNombre();
 		salud = paqueteEnemigo.getSaludTope();
 		energia = paqueteEnemigo.getEnergiaTope();
@@ -257,8 +255,7 @@ public class EstadoBatalla extends Estado {
 		for(Item item : paqueteEnemigo.getInventario()) {
 			enemigo.addItemInventario(item);
 		}
-		enemigo.aplicarEfectoItems();
-		
+
 	}
 
 	public void enviarAtaque(PaqueteAtacar paqueteAtacar) {
