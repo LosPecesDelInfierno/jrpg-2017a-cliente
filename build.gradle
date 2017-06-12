@@ -11,23 +11,8 @@ sourceCompatibility = 1.7
 version = '0.1'
 test.ignoreFailures = true
 
-defaultTasks 'clean', 'compileJava', 'fatJar', 'test', 'checkstyleMain', 'pmd', 'findbugsMain', 'jacocoTestReport'
-/*
-allprojects {
-    gradle.projectsEvaluated {
-        tasks.withType(JavaCompile) {
-            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-        }
-    }
-}*/
-compileJava {
-    //options.encoding = 'UTF-8'
-    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-}
-compileTestJava {
-    //options.encoding = 'UTF-8'
-    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-}
+defaultTasks 'clean', 'compileJava', 'test', 'fatJar' , 'checkstyleMain', 'pmd', 'findbugsMain', 'jacocoTestReport'
+
 sourceSets {
     main {
         java {
@@ -39,7 +24,8 @@ sourceSets {
             
         }
     }
-}
+ }
+
 
 repositories {
 	mavenCentral()
@@ -53,8 +39,8 @@ dependencies {
     compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
     testCompile group: 'junit', name: 'junit', version: '4.+'
     pmdConf group: 'pmd', name: 'pmd', version: '4.3'
-	compile files('gson-2.8.0.jar')
-	compile files('jrpg-dominio-0.1.jar')
+    compile files('gson-2.8.0.jar')
+    compile files('jrpg-dominio-0.1.jar')
 }
 
 /*buildscript {
@@ -63,6 +49,7 @@ dependencies {
 	}
 	dependencies {
 		classpath group: 'net.saliman', name: 'gradle-cobertura-plugin', version: '1.1.0'
+		
 	}
 }*/
 
@@ -73,13 +60,12 @@ test {
     if (manager == null) {
         println("there is no security manager!");
     }
-
-    jvmArgs "-Djava.security.manager=java.lang.SecurityManager"
 }
 
 checkstyle {
 	configFile = new File(rootDir, "src/test/resources/sun_checks.xml")
 	ignoreFailures = true
+	toolVersion "5.9"
 }
 
 /*cobertura {
