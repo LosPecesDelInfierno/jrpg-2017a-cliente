@@ -143,6 +143,7 @@ public class Cliente extends Thread {
 							wait();
 
 							// Le envio los datos al servidor
+							paquetePersonaje.setUsuario(this.paqueteUsuario.getUsername());
 							paquetePersonaje.setComando(Comando.CREACIONPJ);
 							salida.writeObject(gson.toJson(paquetePersonaje));
 							JOptionPane.showMessageDialog(null, "Registro exitoso.");
