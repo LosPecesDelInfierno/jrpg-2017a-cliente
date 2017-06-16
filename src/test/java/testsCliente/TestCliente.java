@@ -2,19 +2,13 @@ package testsCliente;
 
 import java.io.IOException;
 
-import javax.swing.JTextArea;
-
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.sun.org.apache.xerces.internal.parsers.SAXParser;
 
 import cliente.Cliente;
 import mensajeria.Comando;
@@ -28,7 +22,7 @@ public class TestCliente {
 	private final int puerto = 9000;
 	private static ServidorStub serverStub;
 
-	@BeforeClass	
+	@BeforeClass
 	public static void setUpBeforeTests() {
 		serverStub = new ServidorStub();
 		serverStub.start();
@@ -45,7 +39,8 @@ public class TestCliente {
 
 		Cliente cliente = new Cliente(ipDefault, puerto);
 
-		// Pasado este punto la conexi�n entre el cliente y el servidor resulto
+		// Pasado este punto la conexi�n entre el cliente y el servidor
+		// resulto
 		// exitosa
 		Assert.assertEquals(1, 1);
 
@@ -269,7 +264,6 @@ public class TestCliente {
 			e.printStackTrace();
 		}
 	}
-	
 
 	@Test
 	public void testActualizarPersonaje() {

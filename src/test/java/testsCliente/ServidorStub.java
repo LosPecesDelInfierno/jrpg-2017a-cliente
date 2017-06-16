@@ -12,7 +12,6 @@ import mensajeria.Paquete;
 import mensajeria.PaquetePersonaje;
 import mensajeria.PaqueteUsuario;
 
-
 //import servidor.Conector;
 //import servidor.EscuchaCliente;
 
@@ -125,13 +124,15 @@ public class ServidorStub extends Thread {
 
 					case Comando.ACTUALIZARPERSONAJE:
 						paquetePersonaje = (PaquetePersonaje) gson.fromJson(cadenaLeida, PaquetePersonaje.class);
-						
-						//Servidor.getConector().actualizarPersonaje(paquetePersonaje);
 
-						//Servidor.getPersonajesConectados().remove(paquetePersonaje.getId());
-						//Servidor.getPersonajesConectados().put(paquetePersonaje.getId(), paquetePersonaje);
+						// Servidor.getConector().actualizarPersonaje(paquetePersonaje);
 
-						//No actualizo estado para el resto de los clientes ya que es simulado
+						// Servidor.getPersonajesConectados().remove(paquetePersonaje.getId());
+						// Servidor.getPersonajesConectados().put(paquetePersonaje.getId(),
+						// paquetePersonaje);
+
+						// No actualizo estado para el resto de los clientes ya
+						// que es simulado
 						/*
 						 * for (EscuchaCliente conectado :
 						 * Servidor.getClientesConectados()) {
