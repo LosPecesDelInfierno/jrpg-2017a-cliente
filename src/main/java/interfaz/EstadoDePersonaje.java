@@ -1,7 +1,4 @@
 package interfaz;
-import inventario.InventarioPersonaje;
-import javafx.scene.image.Image;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
