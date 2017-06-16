@@ -212,4 +212,17 @@ public class Mundo {
 
 		return tile;
 	}
+	
+	public static boolean esZonaMercado(int[] posicion) {
+
+		if(posicion[0] >= 4 && posicion[0] <= 17 && posicion[1] >= 13 && posicion[1] <= 15) {
+			return true;
+		}
+		
+		if(posicion[0] >= 4 && posicion[0] <= 27 && posicion[1] >= 16 && posicion[1] <= 29) {
+			return true;
+		}
+		
+		return false;
+	}
 }
