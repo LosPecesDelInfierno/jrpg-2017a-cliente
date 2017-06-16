@@ -58,7 +58,7 @@ public class Cliente extends Thread {
 			entrada = new ObjectInputStream(cliente.getInputStream());
 			salida = new ObjectOutputStream(cliente.getOutputStream());
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Fallo al iniciar la aplicaciï¿½n. Revise la conexiï¿½n con el servidor.");
+			JOptionPane.showMessageDialog(null, "Fallo al iniciar la aplicación. Revise la conexión con el servidor.");
 			System.exit(1);
 			e.printStackTrace();
 		}
@@ -74,7 +74,7 @@ public class Cliente extends Thread {
 			puerto = sc.nextInt();
 			sc.close();
 		} catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(null, "No se ha encontrado el archivo de configuraciï¿½n config.txt");
+			JOptionPane.showMessageDialog(null, "No se ha encontrado el archivo de configuración config.txt");
 			e.printStackTrace();
 		}
 
@@ -84,7 +84,7 @@ public class Cliente extends Thread {
 			entrada = new ObjectInputStream(cliente.getInputStream());
 			salida = new ObjectOutputStream(cliente.getOutputStream());
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Fallo al iniciar la aplicaciï¿½n. Revise la conexiï¿½n con el servidor.");
+			JOptionPane.showMessageDialog(null, "Fallo al iniciar la aplicación. Revise la conexión con el servidor.");
 			System.exit(1);
 			e.printStackTrace();
 		}
@@ -177,7 +177,7 @@ public class Cliente extends Thread {
 						} else {
 							if (paquete.getMensaje().equals(Paquete.msjFracaso))
 								JOptionPane.showMessageDialog(null,
-										"Error al iniciar sesiï¿½n. Revise el usuario y la contraseï¿½a");
+										"Error al iniciar sesión. Revise el usuario y la contraseña");
 
 							// El usuario no pudo iniciar sesiï¿½n
 							paqueteUsuario.setInicioSesion(false);
