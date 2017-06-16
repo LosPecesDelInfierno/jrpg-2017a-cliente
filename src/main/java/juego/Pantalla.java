@@ -57,7 +57,7 @@ public class Pantalla {
 					cliente.getSocket().close();
 					System.exit(0);
 				} catch (IOException e) {
-					JOptionPane.showMessageDialog(null, "Fallo al intentar cerrar la aplicaciï¿½n.");
+					JOptionPane.showMessageDialog(null, "Fallo al intentar cerrar la aplicación.");
 					System.exit(1);
 					e.printStackTrace();
 				}
@@ -70,8 +70,9 @@ public class Pantalla {
 		pantalla.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_I) {
-					if(inventario == null) {
-						inventario = new InventarioPersonaje(cliente.getJuego().getPersonaje());
+					if(inventario == null) {					
+						inventario = new InventarioPersonaje(cliente.getJuego().getPersonaje(), pantalla.getLocation());
+						inventario.setLocationRelativeTo(pantalla);				
 						inventario.setVisible(true);
 					} else {
 						inventario.dispose();

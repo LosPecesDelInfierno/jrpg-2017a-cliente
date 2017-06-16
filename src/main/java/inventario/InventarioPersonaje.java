@@ -1,6 +1,7 @@
 package inventario;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Point;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -36,7 +37,7 @@ public class InventarioPersonaje extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public InventarioPersonaje(PaquetePersonaje personaje) {
+	public InventarioPersonaje(PaquetePersonaje personaje, Point location) {
 		setType(Type.POPUP);
 		addKeyListener(new KeyAdapter() {
 			@Override
@@ -46,7 +47,7 @@ public class InventarioPersonaje extends JFrame {
 				}
 			}
 		});
-		setResizable(false);
+		setResizable(false);		
 		setTitle("Inventario Personaje");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 406, 389);
@@ -54,6 +55,7 @@ public class InventarioPersonaje extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setLocation(location);
 		Collection<Item>items = personaje.getInventario();
 		
 		for (Item item : items) {
