@@ -28,22 +28,7 @@ import mensajeria.PaquetePersonaje;
 public class InventarioPersonaje extends JFrame {
 
 	private JPanel contentPane;
-	private String pathImagenes = "recursos/";
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					InventarioPersonaje frame = new InventarioPersonaje();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
+	private String pathImagenes = "recursos/armamento";
 
 	/**
 	 * Create the frame.
