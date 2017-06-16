@@ -1,4 +1,5 @@
 package inventario;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Point;
@@ -42,12 +43,12 @@ public class InventarioPersonaje extends JFrame {
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_I) {
+				if (e.getKeyCode() == KeyEvent.VK_I) {
 					dispose();
 				}
 			}
 		});
-		setResizable(false);		
+		setResizable(false);
 		setTitle("Inventario Personaje");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 406, 389);
@@ -56,8 +57,8 @@ public class InventarioPersonaje extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		setLocation(location);
-		Collection<Item>items = personaje.getInventario();
-		
+		Collection<Item> items = personaje.getInventario();
+
 		for (Item item : items) {
 			String pathImagen = pathImagenes + item.getFoto();
 			String descripcionItem = item.getDescripcionItem();
@@ -65,10 +66,10 @@ public class InventarioPersonaje extends JFrame {
 			case TipoItem.ARMA:
 				ImageIcon arma = new ImageIcon(pathImagen);
 				final String descripcionArma = descripcionItem;
-				final JLabel labelArma = new JLabel(arma);		
+				final JLabel labelArma = new JLabel(arma);
 				labelArma.setHorizontalAlignment(SwingConstants.CENTER);
 				labelArma.setBounds(25, 109, 82, 134);
-				labelArma.addMouseListener(new MouseAdapter() {			
+				labelArma.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseEntered(MouseEvent e) {
 						labelArma.setToolTipText(descripcionArma);
@@ -79,24 +80,24 @@ public class InventarioPersonaje extends JFrame {
 			case TipoItem.ARMADURA:
 				ImageIcon armadura = new ImageIcon(pathImagen);
 				final String descripcionArmadura = descripcionItem;
-				final JLabel labelArmadura = new JLabel(armadura);		
+				final JLabel labelArmadura = new JLabel(armadura);
 				labelArmadura.setHorizontalAlignment(SwingConstants.CENTER);
 				labelArmadura.setBounds(154, 128, 104, 205);
-				labelArmadura.addMouseListener(new MouseAdapter() {			
+				labelArmadura.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseEntered(MouseEvent e) {
 						labelArmadura.setToolTipText(descripcionArmadura);
 					}
-				});	
+				});
 				contentPane.add(labelArmadura);
 				break;
-			
+
 			case TipoItem.BOTAS:
 				ImageIcon botas = new ImageIcon(pathImagen);
 				final String descripcionBotas = descripcionItem;
 				final JLabel labelBotas = new JLabel(botas);
 				labelBotas.setHorizontalAlignment(SwingConstants.CENTER);
-				labelBotas.addMouseListener(new MouseAdapter() {			
+				labelBotas.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseEntered(MouseEvent e) {
 						labelBotas.setToolTipText(descripcionBotas);
@@ -105,14 +106,14 @@ public class InventarioPersonaje extends JFrame {
 				labelBotas.setBounds(299, 254, 88, 92);
 				contentPane.add(labelBotas);
 				break;
-				
+
 			case TipoItem.CASCO:
 				ImageIcon casco = new ImageIcon(pathImagen);
 				final String descripcionCasco = descripcionItem;
 				final JLabel labelCasco = new JLabel(casco);
 				labelCasco.setHorizontalAlignment(SwingConstants.CENTER);
 				labelCasco.setBounds(154, 11, 104, 92);
-				labelCasco.addMouseListener(new MouseAdapter() {			
+				labelCasco.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseEntered(MouseEvent e) {
 						labelCasco.setToolTipText(descripcionCasco);
@@ -120,29 +121,29 @@ public class InventarioPersonaje extends JFrame {
 				});
 				contentPane.add(labelCasco);
 				break;
-				
+
 			case TipoItem.ESCUDO:
 				ImageIcon escudo = new ImageIcon(pathImagen);
 				final String descripcionEscudo = descripcionItem;
-				final JLabel labelEscudo = new JLabel(escudo);		
+				final JLabel labelEscudo = new JLabel(escudo);
 				labelEscudo.setHorizontalAlignment(SwingConstants.CENTER);
 				labelEscudo.setBounds(299, 109, 88, 134);
-				labelEscudo.addMouseListener(new MouseAdapter() {			
+				labelEscudo.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseEntered(MouseEvent e) {
 						labelEscudo.setToolTipText(descripcionEscudo);
 					}
 				});
-				contentPane.add(labelEscudo);				
+				contentPane.add(labelEscudo);
 				break;
-				
+
 			case TipoItem.GUANTES:
 				ImageIcon guantes = new ImageIcon(pathImagen);
 				final String descripcionGuantes = descripcionItem;
-				final JLabel labelGuantes = new JLabel(guantes);		
+				final JLabel labelGuantes = new JLabel(guantes);
 				labelGuantes.setHorizontalAlignment(SwingConstants.CENTER);
 				labelGuantes.setBounds(25, 254, 82, 92);
-				labelGuantes.addMouseListener(new MouseAdapter() {			
+				labelGuantes.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseEntered(MouseEvent e) {
 						labelGuantes.setToolTipText(descripcionGuantes);
@@ -150,20 +151,17 @@ public class InventarioPersonaje extends JFrame {
 				});
 				contentPane.add(labelGuantes);
 				break;
-				
+
 			default:
 				break;
 			}
 		}
-		
-		ImageIcon fondoInventario = new ImageIcon(pathImagenes + "fondoInventario.jpg");		
+
+		ImageIcon fondoInventario = new ImageIcon(pathImagenes + "fondoInventario.jpg");
 		final JLabel labelFondo = new JLabel(fondoInventario);
 		labelFondo.setHorizontalAlignment(SwingConstants.CENTER);
 		labelFondo.setBounds(0, 0, 400, 360);
-		contentPane.add(labelFondo);	
+		contentPane.add(labelFondo);
 	}
-	
 
 }
-
-

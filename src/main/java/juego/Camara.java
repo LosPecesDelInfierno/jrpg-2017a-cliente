@@ -13,12 +13,12 @@ public class Camara {
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
 	}
-	
+
 	public void Centrar(Entidad e) {
 		xOffset = e.getX() - juego.getAncho() / 2 + e.getAncho() / 2;
 		yOffset = e.getY() - juego.getAlto() / 2 + e.getAlto() / 2;
 	}
-	
+
 	public void mover(float dx, float dy) {
 		xOffset += dx;
 		yOffset += dy;

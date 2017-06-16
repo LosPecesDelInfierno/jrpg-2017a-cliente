@@ -28,7 +28,7 @@ public class Entidad {
 
 	Juego juego;
 
-	// Tamaï¿½o de la entidad
+	// Tamaño de la entidad
 	private int ancho;
 	private int alto;
 

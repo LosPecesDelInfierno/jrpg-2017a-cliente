@@ -16,7 +16,7 @@ import mensajeria.PaqueteMovimiento;
 import mensajeria.PaquetePersonaje;
 
 public class Juego implements Runnable {
-	
+
 	private Pantalla pantalla;
 	private final String NOMBRE;
 	private final int ANCHO;
@@ -25,7 +25,9 @@ public class Juego implements Runnable {
 	private Thread hilo;
 	private boolean corriendo;
 
-	private BufferStrategy bs; // Estrategia para graficar mediante buffers (Primero se "grafica" en el/los buffer/s y finalmente en el canvas)
+	private BufferStrategy bs; // Estrategia para graficar mediante buffers
+								// (Primero se "grafica" en el/los buffer/s y
+								// finalmente en el canvas)
 	private Graphics g;
 
 	// Estados
@@ -34,7 +36,7 @@ public class Juego implements Runnable {
 
 	// HandlerMouse
 	private HandlerMouse handlerMouse;
-	
+
 	// Camara
 	private Camara camara;
 
@@ -43,7 +45,7 @@ public class Juego implements Runnable {
 	private EscuchaMensajes escuchaMensajes;
 	private PaquetePersonaje paquetePersonaje;
 	private PaqueteMovimiento ubicacionPersonaje;
-	
+
 	private CargarRecursos cargarRecursos;
 
 	public Juego(final String nombre, final int ancho, final int alto, Cliente cliente, PaquetePersonaje pp) {
@@ -52,21 +54,21 @@ public class Juego implements Runnable {
 		this.ANCHO = ancho;
 		this.cliente = cliente;
 		this.paquetePersonaje = pp;
-		
-		// Inicializo la ubicacion del personaje 
+
+		// Inicializo la ubicacion del personaje
 		ubicacionPersonaje = new PaqueteMovimiento();
 		ubicacionPersonaje.setIdPersonaje(paquetePersonaje.getId());
 		ubicacionPersonaje.setFrame(0);
 		ubicacionPersonaje.setDireccion(6);
-		
+
 		// Creo el escucha de mensajes
 		escuchaMensajes = new EscuchaMensajes(this);
 		escuchaMensajes.start();
-		
+
 		handlerMouse = new HandlerMouse();
-		
+
 		iniciar();
-		
+
 		cargarRecursos = new CargarRecursos(cliente);
 		cargarRecursos.start();
 	}
@@ -82,7 +84,7 @@ public class Juego implements Runnable {
 	}
 
 	private void actualizar() { // Actualiza los objetos y sus posiciones
-		
+
 		if (Estado.getEstado() != null) {
 			Estado.getEstado().actualizar();
 		}
@@ -90,7 +92,8 @@ public class Juego implements Runnable {
 
 	private void graficar() { // Grafica los objetos y sus posiciones
 		bs = pantalla.getCanvas().getBufferStrategy();
-		if (bs == null) { // Seteo una estrategia para el canvas en caso de que no tenga una
+		if (bs == null) { // Seteo una estrategia para el canvas en caso de que
+							// no tenga una
 			pantalla.getCanvas().createBufferStrategy(3);
 			return;
 		}
@@ -100,8 +103,8 @@ public class Juego implements Runnable {
 		g.clearRect(0, 0, ANCHO, ALTO); // Limpiamos la pantalla
 
 		// Graficado de imagenes
-		g.setFont(new Font("Book Antiqua",1,15));
-	
+		g.setFont(new Font("Book Antiqua", 1, 15));
+
 		if (Estado.getEstado() != null) {
 			Estado.getEstado().graficar(g);
 		}
@@ -116,17 +119,30 @@ public class Juego implements Runnable {
 	public void run() { // Hilo principal del juego
 
 		int fps = 60; // Cantidad de actualizaciones por segundo que se desean
-		double tiempoPorActualizacion = 1000000000 / fps; // Cantidad de nanosegundos en FPS deseados
+		double tiempoPorActualizacion = 1000000000 / fps; // Cantidad de
+															// nanosegundos en
+															// FPS deseados
 		double delta = 0;
 		long ahora;
 		long ultimoTiempo = System.nanoTime();
 		long timer = 0; // Timer para mostrar fps cada un segundo
-		int actualizaciones = 0; // Cantidad de actualizaciones que se realizan realmente
+		int actualizaciones = 0; // Cantidad de actualizaciones que se realizan
+									// realmente
 
 		while (corriendo) {
 			ahora = System.nanoTime();
-			delta += (ahora - ultimoTiempo) / tiempoPorActualizacion; // Calculo  para determinar cuando realizar la actualizacion y el graficado
-			timer += ahora - ultimoTiempo; // Sumo el tiempo transcurrido hasta que se acumule 1 segundo y mostrar los FPS
+			delta += (ahora - ultimoTiempo) / tiempoPorActualizacion; // Calculo
+																		// para
+																		// determinar
+																		// cuando
+																		// realizar
+																		// la
+																		// actualizacion
+																		// y el
+																		// graficado
+			timer += ahora - ultimoTiempo; // Sumo el tiempo transcurrido hasta
+											// que se acumule 1 segundo y
+											// mostrar los FPS
 			ultimoTiempo = ahora; // Para las proximas corridas del bucle
 
 			if (delta >= 1) {
@@ -149,7 +165,7 @@ public class Juego implements Runnable {
 	public synchronized void start() { // Inicia el juego
 		if (corriendo)
 			return;
-		
+
 		estadoJuego = new EstadoJuego(this);
 		Estado.setEstado(estadoJuego);
 		pantalla.mostrar();
@@ -181,45 +197,46 @@ public class Juego implements Runnable {
 	public HandlerMouse getHandlerMouse() {
 		return handlerMouse;
 	}
-	
+
 	public Camara getCamara() {
 		return camara;
 	}
-	
+
 	public EstadoJuego getEstadoJuego() {
 		return (EstadoJuego) estadoJuego;
 	}
-	
-	public EstadoBatalla getEstadoBatalla(){
+
+	public EstadoBatalla getEstadoBatalla() {
 		return (EstadoBatalla) estadoBatalla;
 	}
-	
-	public void setEstadoBatalla(EstadoBatalla estadoBatalla){
+
+	public void setEstadoBatalla(EstadoBatalla estadoBatalla) {
 		this.estadoBatalla = estadoBatalla;
 	}
-	
+
 	public Cliente getCliente() {
 		return cliente;
 	}
-	
+
 	public EscuchaMensajes getEscuchaMensajes() {
 		return escuchaMensajes;
 	}
-	
+
 	public PaquetePersonaje getPersonaje() {
 		return paquetePersonaje;
 	}
-	
-	public PaqueteMovimiento getUbicacionPersonaje(){
+
+	public PaqueteMovimiento getUbicacionPersonaje() {
 		return ubicacionPersonaje;
 	}
-	
+
 	public void setPersonaje(PaquetePersonaje paquetePersonaje) {
 		this.paquetePersonaje = paquetePersonaje;
 	}
-	
+
 	public void actualizarPersonaje() {
-		paquetePersonaje = (PaquetePersonaje) (escuchaMensajes.getPersonajesConectados().get(paquetePersonaje.getId()).clone());
-//		cliente.set
+		paquetePersonaje = (PaquetePersonaje) (escuchaMensajes.getPersonajesConectados().get(paquetePersonaje.getId())
+				.clone());
+		// cliente.set
 	}
 }

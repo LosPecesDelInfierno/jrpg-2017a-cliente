@@ -38,11 +38,11 @@ public class MenuCreacionPj extends JFrame {
 	private JComboBox<String> cbxRaza;
 
 	public MenuCreacionPj(final Cliente cliente, final PaquetePersonaje personaje) {
-		
+
 		setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
-				new ImageIcon(MenuJugar.class.getResource("/cursor.png")).getImage(),
-				new Point(0,0),"custom cursor"));
-		
+				new ImageIcon(MenuJugar.class.getResource("/cursor.png")).getImage(), new Point(0, 0),
+				"custom cursor"));
+
 		final String vecSalud[] = { "55", "50", "60" };
 		final String vecEnergia[] = { "55", "60", "50" };
 		final String vecFuerza[] = { "15", "10", "10" };
@@ -162,7 +162,7 @@ public class MenuCreacionPj extends JFrame {
 		layeredPane.add(btnAceptar, new Integer(1));
 		btnAceptar.setFocusable(false);
 		btnAceptar.setIcon(new ImageIcon(MenuCreacionPj.class.getResource("/frames/BotonMenu.png")));
-		
+
 		btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				personaje.setNombre(nombre.getText());
@@ -181,7 +181,7 @@ public class MenuCreacionPj extends JFrame {
 				dispose();
 			}
 		});
-		
+
 		JLabel lblNewLabel = new JLabel("Raza");
 		lblNewLabel.setBounds(33, 23, 46, 14);
 		layeredPane.add(lblNewLabel, new Integer(1));
@@ -220,7 +220,7 @@ public class MenuCreacionPj extends JFrame {
 		cbxRaza.addItem("Humano");
 		cbxRaza.addItem("Elfo");
 		cbxRaza.addItem("Orco");
-		
+
 		JLabel lblBackground = new JLabel("");
 		lblBackground.setBounds(0, 0, 444, 271);
 		layeredPane.add(lblBackground, new Integer(0));

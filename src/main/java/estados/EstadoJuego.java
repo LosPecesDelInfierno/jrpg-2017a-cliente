@@ -34,18 +34,19 @@ public class EstadoJuego extends Estado {
 	private Map<Integer, PaquetePersonaje> personajesConectados;
 	private boolean haySolicitud;
 	private int tipoSolicitud;
-	
+
 	private final Gson gson = new Gson();
-	
+
 	private BufferedImage miniaturaPersonaje;
-	
+
 	MenuInfoPersonaje menuEnemigo;
 
 	public EstadoJuego(Juego juego) {
 		super(juego);
 		mundo = new Mundo(juego, "recursos/" + getMundo() + ".txt", "recursos/" + getMundo() + ".txt");
 		paquetePersonaje = juego.getPersonaje();
-		entidadPersonaje = new Entidad(juego, mundo, 64, 64, juego.getPersonaje().getNombre(), 0, 0, Recursos.personaje.get(juego.getPersonaje().getRaza()), 150);
+		entidadPersonaje = new Entidad(juego, mundo, 64, 64, juego.getPersonaje().getNombre(), 0, 0,
+				Recursos.personaje.get(juego.getPersonaje().getRaza()), 150);
 		miniaturaPersonaje = Recursos.personaje.get(paquetePersonaje.getRaza()).get(5)[0];
 
 		try {
@@ -53,7 +54,8 @@ public class EstadoJuego extends Estado {
 			juego.getPersonaje().setComando(Comando.CONEXION);
 			juego.getPersonaje().setEstado(Estado.estadoJuego);
 			juego.getCliente().getSalida().writeObject(gson.toJson(juego.getPersonaje(), PaquetePersonaje.class));
-			juego.getCliente().getSalida().writeObject(gson.toJson(juego.getUbicacionPersonaje(), PaqueteMovimiento.class));
+			juego.getCliente().getSalida()
+					.writeObject(gson.toJson(juego.getUbicacionPersonaje(), PaqueteMovimiento.class));
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "Fallo la conexión con el servidor al ingresar al mundo.");
 			e.printStackTrace();
@@ -70,20 +72,20 @@ public class EstadoJuego extends Estado {
 	public void graficar(Graphics g) {
 		g.drawImage(Recursos.background, 0, 0, juego.getAncho(), juego.getAlto(), null);
 		mundo.graficar(g);
-		//entidadPersonaje.graficar(g);
+		// entidadPersonaje.graficar(g);
 		graficarPersonajes(g);
 		mundo.graficarObstaculos(g);
 		entidadPersonaje.graficarNombre(g);
 		g.drawImage(Recursos.marco, 0, 0, juego.getAncho(), juego.getAlto(), null);
 		EstadoDePersonaje.dibujarEstadoDePersonaje(g, 5, 5, paquetePersonaje, miniaturaPersonaje);
-		if(haySolicitud)
+		if (haySolicitud)
 			menuEnemigo.graficar(g, tipoSolicitud);
-			
+
 	}
 
 	public void graficarPersonajes(Graphics g) {
-		
-		if(juego.getEscuchaMensajes().getPersonajesConectados() != null){
+
+		if (juego.getEscuchaMensajes().getPersonajesConectados() != null) {
 			personajesConectados = new HashMap(juego.getEscuchaMensajes().getPersonajesConectados());
 			ubicacionPersonajes = new HashMap(juego.getEscuchaMensajes().getUbicacionPersonajes());
 			Iterator<Integer> it = personajesConectados.keySet().iterator();
@@ -94,18 +96,26 @@ public class EstadoJuego extends Estado {
 			while (it.hasNext()) {
 				key = (int) it.next();
 				actual = ubicacionPersonajes.get(key);
-				if (actual != null && actual.getIdPersonaje() != juego.getPersonaje().getId() && personajesConectados.get(actual.getIdPersonaje()).getEstado() == Estado.estadoJuego) {
-						Pantalla.centerString(g, new Rectangle((int) (actual.getPosX() - juego.getCamara().getxOffset() + 32), (int) (actual.getPosY() - juego.getCamara().getyOffset() - 20 ), 0, 10), personajesConectados.get(actual.getIdPersonaje()).getNombre());
-						g.drawImage(Recursos.personaje.get(personajesConectados.get(actual.getIdPersonaje()).getRaza()).get(actual.getDireccion())[actual.getFrame()], (int) (actual.getPosX() - juego.getCamara().getxOffset() ), (int) (actual.getPosY() - juego.getCamara().getyOffset()), 64, 64, null);
+				if (actual != null && actual.getIdPersonaje() != juego.getPersonaje().getId()
+						&& personajesConectados.get(actual.getIdPersonaje()).getEstado() == Estado.estadoJuego) {
+					Pantalla.centerString(g,
+							new Rectangle((int) (actual.getPosX() - juego.getCamara().getxOffset() + 32),
+									(int) (actual.getPosY() - juego.getCamara().getyOffset() - 20), 0, 10),
+							personajesConectados.get(actual.getIdPersonaje()).getNombre());
+					g.drawImage(
+							Recursos.personaje.get(personajesConectados.get(actual.getIdPersonaje()).getRaza())
+									.get(actual.getDireccion())[actual.getFrame()],
+							(int) (actual.getPosX() - juego.getCamara().getxOffset()),
+							(int) (actual.getPosY() - juego.getCamara().getyOffset()), 64, 64, null);
 				}
 			}
 		}
 	}
-	
+
 	public Entidad getPersonaje() {
 		return entidadPersonaje;
 	}
-	
+
 	private String getMundo() {
 		int mundo = juego.getPersonaje().getMapa();
 
@@ -119,28 +129,28 @@ public class EstadoJuego extends Estado {
 
 		return null;
 	}
-	
+
 	public void setHaySolicitud(boolean b, PaquetePersonaje enemigo, int tipoSolicitud) {
 		haySolicitud = b;
 		// menu que mostrara al enemigo
 		menuEnemigo = new MenuInfoPersonaje(300, 50, enemigo);
 		this.tipoSolicitud = tipoSolicitud;
 	}
-	
+
 	public boolean getHaySolicitud() {
 		return haySolicitud;
 	}
-	
+
 	public void actualizarPersonaje() {
 		paquetePersonaje = juego.getPersonaje();
 	}
-	
-	public MenuInfoPersonaje getMenuEnemigo(){
+
+	public MenuInfoPersonaje getMenuEnemigo() {
 		return menuEnemigo;
 	}
 
 	public int getTipoSolicitud() {
 		return tipoSolicitud;
 	}
-	
+
 }
