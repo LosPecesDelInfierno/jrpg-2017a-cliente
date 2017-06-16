@@ -24,16 +24,28 @@ import java.awt.event.MouseAdapter;
 import javax.swing.SwingConstants;
 import mensajeria.Paquete;
 import mensajeria.PaquetePersonaje;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.Window.Type;
 
 public class InventarioPersonaje extends JFrame {
 
 	private JPanel contentPane;
-	private String pathImagenes = "recursos/armamento";
+	private String pathImagenes = "recursos/armamento/";
 
 	/**
 	 * Create the frame.
 	 */
 	public InventarioPersonaje(PaquetePersonaje personaje) {
+		setType(Type.POPUP);
+		addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_I) {
+					dispose();
+				}
+			}
+		});
 		setResizable(false);
 		setTitle("Inventario Personaje");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -142,7 +154,7 @@ public class InventarioPersonaje extends JFrame {
 			}
 		}
 		
-		ImageIcon fondoInventario = new ImageIcon("recursos/fondoInventario.jpg");		
+		ImageIcon fondoInventario = new ImageIcon(pathImagenes + "fondoInventario.jpg");		
 		final JLabel labelFondo = new JLabel(fondoInventario);
 		labelFondo.setHorizontalAlignment(SwingConstants.CENTER);
 		labelFondo.setBounds(0, 0, 400, 360);

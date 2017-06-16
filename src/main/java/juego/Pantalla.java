@@ -31,6 +31,7 @@ public class Pantalla {
 
 	private JFrame pantalla;
 	private Canvas canvas;
+	private InventarioPersonaje inventario;
 
 	private final Gson gson = new Gson();
 
@@ -69,8 +70,13 @@ public class Pantalla {
 		pantalla.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_I) {
-					InventarioPersonaje inventario = new InventarioPersonaje(cliente.getJuego().getPersonaje());
-					inventario.setVisible(true);
+					if(inventario == null) {
+						inventario = new InventarioPersonaje(cliente.getJuego().getPersonaje());
+						inventario.setVisible(true);
+					} else {
+						inventario.dispose();
+						inventario = null;
+					}
 				}
 			}
 		});
