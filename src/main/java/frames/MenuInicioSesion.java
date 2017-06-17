@@ -90,7 +90,7 @@ public class MenuInicioSesion extends JFrame {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void keyReleased(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					synchronized (cliente) {
 						cliente.setAccion(Comando.INICIOSESION);
 						cliente.getPaqueteUsuario().setUsername(textField.getText());

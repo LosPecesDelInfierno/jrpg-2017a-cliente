@@ -26,6 +26,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JLayeredPane;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class MenuRegistro extends JFrame {
 
@@ -84,6 +86,20 @@ public class MenuRegistro extends JFrame {
 		btnRegistrarse.setIcon(new ImageIcon(MenuRegistro.class.getResource("/frames/BotonMenu.png")));
 
 		pwPassword = new JPasswordField();
+		pwPassword.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					synchronized (cliente) {
+						cliente.getPaqueteUsuario().setUsername(txtUsuario.getText());
+						cliente.getPaqueteUsuario().setPassword(pwPassword.getText());
+						cliente.setAccion(Comando.REGISTRO);
+						cliente.notify();
+					}
+					dispose();
+				}
+			}
+		});
 		pwPassword.setBounds(199, 120, 118, 20);
 		layeredPane.add(pwPassword, new Integer(1));
 
