@@ -219,10 +219,6 @@ public class EstadoBatalla extends Estado {
 			personaje = new Elfo(nombre, salud, energia, fuerza, destreza, inteligencia, casta, experiencia, nivel, id);
 		}
 
-		for (Item item : paquetePersonaje.getInventario()) {
-			personaje.addItemInventario(item);
-		}
-
 		nombre = paqueteEnemigo.getNombre();
 		salud = paqueteEnemigo.getSaludTope();
 		energia = paqueteEnemigo.getEnergiaTope();
@@ -248,10 +244,6 @@ public class EstadoBatalla extends Estado {
 			enemigo = new Orco(nombre, salud, energia, fuerza, destreza, inteligencia, casta, experiencia, nivel, id);
 		} else if (paqueteEnemigo.getRaza().equals("Elfo")) {
 			enemigo = new Elfo(nombre, salud, energia, fuerza, destreza, inteligencia, casta, experiencia, nivel, id);
-		}
-
-		for (Item item : paqueteEnemigo.getInventario()) {
-			enemigo.addItemInventario(item);
 		}
 
 	}
