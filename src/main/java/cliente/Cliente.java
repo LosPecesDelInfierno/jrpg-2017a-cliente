@@ -58,7 +58,7 @@ public class Cliente extends Thread {
 			entrada = new ObjectInputStream(cliente.getInputStream());
 			salida = new ObjectOutputStream(cliente.getOutputStream());
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Fallo al iniciar la aplicaci髇. Revise la conexi髇 con el servidor.");
+			JOptionPane.showMessageDialog(null, "Fallo al iniciar la aplicaci贸n. Revise la conexi贸n con el servidor.");
 			System.exit(1);
 			e.printStackTrace();
 		}
@@ -74,7 +74,7 @@ public class Cliente extends Thread {
 			puerto = sc.nextInt();
 			sc.close();
 		} catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(null, "No se ha encontrado el archivo de configuraci髇 config.txt");
+			JOptionPane.showMessageDialog(null, "No se ha encontrado el archivo de configuraci贸n config.txt");
 			e.printStackTrace();
 		}
 
@@ -84,7 +84,7 @@ public class Cliente extends Thread {
 			entrada = new ObjectInputStream(cliente.getInputStream());
 			salida = new ObjectOutputStream(cliente.getOutputStream());
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Fallo al iniciar la aplicaci髇. Revise la conexi髇 con el servidor.");
+			JOptionPane.showMessageDialog(null, "Fallo al iniciar la aplicaci贸n. Revise la conexi贸n con el servidor.");
 			System.exit(1);
 			e.printStackTrace();
 		}
@@ -168,7 +168,7 @@ public class Cliente extends Thread {
 					case Comando.INICIOSESION:
 						if (paquete.getMensaje().equals(Paquete.msjExito)) {
 
-							// El usuario ya inicio sesi髇
+							// El usuario ya inicio sesi贸n
 							paqueteUsuario.setInicioSesion(true);
 
 							// Recibo el paquete personaje con los datos
@@ -177,7 +177,7 @@ public class Cliente extends Thread {
 						} else {
 							if (paquete.getMensaje().equals(Paquete.msjFracaso))
 								JOptionPane.showMessageDialog(null,
-										"Error al iniciar sesi髇. Revise el usuario y la contrase馻");
+										"Error al iniciar sesi贸n. Revise el usuario y la contrase帽a");
 
 							// El usuario no pudo iniciar sesi锟絥
 							paqueteUsuario.setInicioSesion(false);
@@ -230,7 +230,7 @@ public class Cliente extends Thread {
 				menuCarga.dispose();
 
 			} catch (IOException | InterruptedException | ClassNotFoundException e) {
-				JOptionPane.showMessageDialog(null, "Fallo la conexi髇 con el servidor durante el inicio de sesi髇.");
+				JOptionPane.showMessageDialog(null, "Fallo la conexi贸n con el servidor durante el inicio de sesi贸n.");
 				System.exit(1);
 				e.printStackTrace();
 			}

@@ -28,7 +28,7 @@ public class Entidad {
 
 	Juego juego;
 
-	// Tamaño de la entidad
+	// TamaÃ±o de la entidad
 	private int ancho;
 	private int alto;
 
@@ -165,7 +165,7 @@ public class Entidad {
 							try {
 								juego.getCliente().getSalida().writeObject(gson.toJson(pBatalla));
 							} catch (IOException e) {
-								JOptionPane.showMessageDialog(null, "Fallo la conexión con el servidor");
+								JOptionPane.showMessageDialog(null, "Fallo la conexiÃ³n con el servidor");
 								e.printStackTrace();
 							}
 						} else {
@@ -416,7 +416,7 @@ public class Entidad {
 			juego.getCliente().getSalida()
 					.writeObject(gson.toJson(juego.getUbicacionPersonaje(), PaqueteMovimiento.class));
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Fallo la conexión con el servidor.");
+			JOptionPane.showMessageDialog(null, "Fallo la conexiÃ³n con el servidor.");
 			e.printStackTrace();
 		}
 	}

@@ -57,7 +57,7 @@ public class EstadoJuego extends Estado {
 			juego.getCliente().getSalida()
 					.writeObject(gson.toJson(juego.getUbicacionPersonaje(), PaqueteMovimiento.class));
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Fallo la conexión con el servidor al ingresar al mundo.");
+			JOptionPane.showMessageDialog(null, "Fallo la conexiÃ³n con el servidor al ingresar al mundo.");
 			e.printStackTrace();
 		}
 	}

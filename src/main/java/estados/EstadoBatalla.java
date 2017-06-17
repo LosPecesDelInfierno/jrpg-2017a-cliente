@@ -162,7 +162,7 @@ public class EstadoBatalla extends Estado {
 					}
 				} else if (haySpellSeleccionada && !seRealizoAccion) {
 					JOptionPane.showMessageDialog(null,
-							"No posees la energía suficiente para realizar esta habilidad.");
+							"No posees la energÃ­a suficiente para realizar esta habilidad.");
 				}
 
 				juego.getHandlerMouse().setNuevoClick(false);
@@ -296,7 +296,7 @@ public class EstadoBatalla extends Estado {
 			juego.getCliente().getSalida().writeObject(gson.toJson(paquetePersonaje));
 			juego.getCliente().getSalida().writeObject(gson.toJson(paqueteEnemigo));
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Fallo la conexión con el servidor.");
+			JOptionPane.showMessageDialog(null, "Fallo la conexiÃ³n con el servidor.");
 			e.printStackTrace();
 		}
 	}
