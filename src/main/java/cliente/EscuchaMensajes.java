@@ -18,6 +18,7 @@ import mensajeria.PaqueteBatalla;
 import mensajeria.PaqueteDeMovimientos;
 import mensajeria.PaqueteDePersonajes;
 import mensajeria.PaqueteFinalizarBatalla;
+import mensajeria.PaqueteMensaje;
 import mensajeria.PaqueteMovimiento;
 import mensajeria.PaquetePersonaje;
 
@@ -42,6 +43,7 @@ public class EscuchaMensajes extends Thread {
 		try {
 
 			Paquete paquete;
+			PaqueteMensaje paqueteMensaje;
 			PaquetePersonaje paquetePersonaje;
 			PaqueteMovimiento personaje;
 			PaqueteBatalla paqueteBatalla;
@@ -89,6 +91,11 @@ public class EscuchaMensajes extends Thread {
 					juego.getPersonaje().setEstado(Estado.estadoJuego);
 					Estado.setEstado(juego.getEstadoJuego());
 					break;
+					
+				case Comando.MENSAJE:
+					paqueteMensaje = gson.fromJson(objetoLeido, PaqueteMensaje.class);
+					juego.recibirMensaje(paqueteMensaje);
+					break;
 
 				case Comando.ACTUALIZARPERSONAJE:
 					paquetePersonaje = (PaquetePersonaje) gson.fromJson(objetoLeido, PaquetePersonaje.class);
@@ -103,7 +110,7 @@ public class EscuchaMensajes extends Thread {
 				}
 			}
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Fallo la conexión con el servidor.");
+			JOptionPane.showMessageDialog(null, "Fallo la conexiï¿½n con el servidor.");
 			e.printStackTrace();
 		}
 	}

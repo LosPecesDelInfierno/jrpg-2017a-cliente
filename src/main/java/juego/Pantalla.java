@@ -14,6 +14,8 @@ import java.awt.event.WindowEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -25,6 +27,8 @@ import cliente.Cliente;
 import frames.MenuJugar;
 import mensajeria.Comando;
 import mensajeria.Paquete;
+import mensajeria.PaqueteMensaje;
+import mensajeria.PaquetePersonaje;
 import inventario.InventarioPersonaje;
 
 public class Pantalla {
@@ -57,7 +61,7 @@ public class Pantalla {
 					cliente.getSocket().close();
 					System.exit(0);
 				} catch (IOException e) {
-					JOptionPane.showMessageDialog(null, "Fallo al intentar cerrar la aplicaci�n.");
+					JOptionPane.showMessageDialog(null, "Fallo al intentar cerrar la aplicaci�n.");
 					System.exit(1);
 					e.printStackTrace();
 				}
@@ -78,6 +82,26 @@ public class Pantalla {
 						inventario.dispose();
 						inventario = null;
 					}
+				}
+				
+				// TODO: Mandar a la ventana de chat, que es la que tiene que llevar esta lógica
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					PaqueteMensaje mensajeFruta = new PaqueteMensaje(cliente.getJuego().getPersonaje().getId(), "Hola soy una difusión");
+					try {
+						cliente.getSalida().writeObject(gson.toJson(mensajeFruta));
+					} catch (Exception e2) {
+						e2.printStackTrace();
+					}
+				}
+				
+				// Muestro los personajes conectados
+				// TODO: Volar. Es una prueba
+				if (e.getKeyCode() == KeyEvent.VK_P) {
+					List<String> nombresPJs = new LinkedList<String>();
+					for (PaquetePersonaje pj : cliente.getJuego().getEscuchaMensajes().getPersonajesConectados().values()) {
+						nombresPJs.add(pj.getNombre() + "(" + pj.getId() + ")");
+					}
+					JOptionPane.showMessageDialog(null, String.join("; ", nombresPJs), "Personajes Conectados", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 		});
