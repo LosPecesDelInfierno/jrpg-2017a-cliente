@@ -192,11 +192,11 @@ public class EstadoBatalla extends Estado {
 
 	private void crearPersonajes() {
 		String nombre = paquetePersonaje.getNombre();
-		int salud = paquetePersonaje.getSaludTope();
-		int energia = paquetePersonaje.getEnergiaTope();
-		int fuerza = paquetePersonaje.getFuerza();
-		int destreza = paquetePersonaje.getDestreza();
-		int inteligencia = paquetePersonaje.getInteligencia();
+		int salud = paquetePersonaje.getSaludBase();
+		int energia = paquetePersonaje.getEnergiaBase();
+		int fuerza = paquetePersonaje.getFuerzaBase();
+		int destreza = paquetePersonaje.getDestrezaBase();
+		int inteligencia = paquetePersonaje.getInteligenciaBase();
 		int experiencia = paquetePersonaje.getExperiencia();
 		int nivel = paquetePersonaje.getNivel();
 		int id = paquetePersonaje.getId();
@@ -218,13 +218,19 @@ public class EstadoBatalla extends Estado {
 		} else if (paquetePersonaje.getRaza().equals("Elfo")) {
 			personaje = new Elfo(nombre, salud, energia, fuerza, destreza, inteligencia, casta, experiencia, nivel, id);
 		}
+		
+		personaje.setBonus(paquetePersonaje.getBonusSalud(), 
+				paquetePersonaje.getBonusEnergia(),
+				paquetePersonaje.getBonusFuerza(),
+				paquetePersonaje.getBonusDestreza(),
+				paquetePersonaje.getBonusInteligencia());
 
 		nombre = paqueteEnemigo.getNombre();
-		salud = paqueteEnemigo.getSaludTope();
-		energia = paqueteEnemigo.getEnergiaTope();
-		fuerza = paqueteEnemigo.getFuerza();
-		destreza = paqueteEnemigo.getDestreza();
-		inteligencia = paqueteEnemigo.getInteligencia();
+		salud = paqueteEnemigo.getSaludBase();
+		energia = paqueteEnemigo.getEnergiaBase();
+		fuerza = paqueteEnemigo.getFuerzaBase();
+		destreza = paqueteEnemigo.getDestrezaBase();
+		inteligencia = paqueteEnemigo.getInteligenciaBase();
 		experiencia = paqueteEnemigo.getExperiencia();
 		nivel = paqueteEnemigo.getNivel();
 		id = paqueteEnemigo.getId();
@@ -245,7 +251,12 @@ public class EstadoBatalla extends Estado {
 		} else if (paqueteEnemigo.getRaza().equals("Elfo")) {
 			enemigo = new Elfo(nombre, salud, energia, fuerza, destreza, inteligencia, casta, experiencia, nivel, id);
 		}
-
+		
+		enemigo.setBonus(paqueteEnemigo.getBonusSalud(), 
+				paqueteEnemigo.getBonusEnergia(),
+				paqueteEnemigo.getBonusFuerza(),
+				paqueteEnemigo.getBonusDestreza(),
+				paqueteEnemigo.getBonusInteligencia());
 	}
 
 	public void enviarAtaque(PaqueteAtacar paqueteAtacar) {
@@ -261,22 +272,22 @@ public class EstadoBatalla extends Estado {
 		try {
 			juego.getCliente().getSalida().writeObject(gson.toJson(paqueteFinalizarBatalla));
 
-			paquetePersonaje.setSaludTope(personaje.getSaludTope());
-			paquetePersonaje.setEnergiaTope(personaje.getEnergiaTope());
+			paquetePersonaje.setSaludTope(personaje.getSaludBase());
+			paquetePersonaje.setEnergiaTope(personaje.getEnergiaBase());
 			paquetePersonaje.setNivel(personaje.getNivel());
 			paquetePersonaje.setExperiencia(personaje.getExperiencia());
-			paquetePersonaje.setDestreza(personaje.getDestreza());
-			paquetePersonaje.setFuerza(personaje.getFuerza());
-			paquetePersonaje.setInteligencia(personaje.getInteligencia());
+			paquetePersonaje.setDestreza(personaje.getDestrezaBase());
+			paquetePersonaje.setFuerza(personaje.getFuerzaBase());
+			paquetePersonaje.setInteligencia(personaje.getInteligenciaBase());
 			paquetePersonaje.setGanoBatalla(true);
 
-			paqueteEnemigo.setSaludTope(enemigo.getSaludTope());
-			paqueteEnemigo.setEnergiaTope(enemigo.getEnergiaTope());
+			paqueteEnemigo.setSaludTope(enemigo.getSaludBase());
+			paqueteEnemigo.setEnergiaTope(enemigo.getEnergiaBase());
 			paqueteEnemigo.setNivel(enemigo.getNivel());
 			paqueteEnemigo.setExperiencia(enemigo.getExperiencia());
-			paqueteEnemigo.setDestreza(enemigo.getDestreza());
-			paqueteEnemigo.setFuerza(enemigo.getFuerza());
-			paqueteEnemigo.setInteligencia(enemigo.getInteligencia());
+			paqueteEnemigo.setDestreza(enemigo.getDestrezaBase());
+			paqueteEnemigo.setFuerza(enemigo.getFuerzaBase());
+			paqueteEnemigo.setInteligencia(enemigo.getInteligenciaBase());
 
 			paqueteEnemigo.setGanoBatalla(false);
 			paquetePersonaje.setComando(Comando.ACTUALIZARPERSONAJE);
