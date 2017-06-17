@@ -22,6 +22,8 @@ import javax.swing.JPasswordField;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JLayeredPane;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class MenuInicioSesion extends JFrame {
 
@@ -84,6 +86,21 @@ public class MenuInicioSesion extends JFrame {
 		textField.setColumns(10);
 
 		passwordField = new JPasswordField();
+		passwordField.addKeyListener(new KeyAdapter() {
+			@SuppressWarnings("deprecation")
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					synchronized (cliente) {
+						cliente.setAccion(Comando.INICIOSESION);
+						cliente.getPaqueteUsuario().setUsername(textField.getText());
+						cliente.getPaqueteUsuario().setPassword(passwordField.getText());
+						cliente.notify();
+						dispose();
+					}
+				}
+			}
+		});
 		passwordField.setBounds(198, 119, 118, 20);
 		layeredPane.add(passwordField, new Integer(1));
 		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 11));

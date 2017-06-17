@@ -168,7 +168,7 @@ public class Cliente extends Thread {
 					case Comando.INICIOSESION:
 						if (paquete.getMensaje().equals(Paquete.msjExito)) {
 
-							// El usuario ya inicio sesiï¿½n
+							// El usuario ya inicio sesión
 							paqueteUsuario.setInicioSesion(true);
 
 							// Recibo el paquete personaje con los datos
