@@ -29,7 +29,6 @@ import mensajeria.Comando;
 import mensajeria.Paquete;
 import mensajeria.PaqueteMensaje;
 import mensajeria.PaquetePersonaje;
-import miString.MiString;
 import inventario.InventarioPersonaje;
 
 public class Pantalla {
@@ -102,7 +101,7 @@ public class Pantalla {
 					for (PaquetePersonaje pj : cliente.getJuego().getEscuchaMensajes().getPersonajesConectados().values()) {
 						nombresPJs.add(pj.getNombre() + "(" + pj.getId() + ")");
 					}
-					JOptionPane.showMessageDialog(null, MiString.join("; ", nombresPJs), "Personajes Conectados", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(null, String.join("; ", nombresPJs), "Personajes Conectados", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 		});
