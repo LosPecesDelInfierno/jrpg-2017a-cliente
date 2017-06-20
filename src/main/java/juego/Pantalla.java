@@ -23,6 +23,8 @@ import javax.swing.JOptionPane;
 
 import com.google.gson.Gson;
 
+import chat.VentanaChat;
+import chat.MessengerClient;
 import cliente.Cliente;
 import frames.MenuJugar;
 import mensajeria.Comando;
@@ -36,6 +38,7 @@ public class Pantalla {
 	private JFrame pantalla;
 	private Canvas canvas;
 	private InventarioPersonaje inventario;
+	private VentanaChat chat;
 
 	private final Gson gson = new Gson();
 
@@ -61,7 +64,7 @@ public class Pantalla {
 					cliente.getSocket().close();
 					System.exit(0);
 				} catch (IOException e) {
-					JOptionPane.showMessageDialog(null, "Fallo al intentar cerrar la aplicaci�n.");
+					JOptionPane.showMessageDialog(null, "Fallo al intentar cerrar la aplicación.");
 					System.exit(1);
 					e.printStackTrace();
 				}
@@ -82,6 +85,15 @@ public class Pantalla {
 						inventario.dispose();
 						inventario = null;
 					}
+				} else if (e.getKeyCode() == KeyEvent.VK_C) {
+//					if (chat == null) {
+//						chat = new VentanaChat("Federico");
+//						chat.setLocationRelativeTo(pantalla);
+//						chat.setVisible(true);
+//					} else {
+//						chat.dispose();
+//						chat = null;
+//					}
 				}
 				
 				// TODO: Mandar a la ventana de chat, que es la que tiene que llevar esta lógica
@@ -97,11 +109,13 @@ public class Pantalla {
 				// Muestro los personajes conectados
 				// TODO: Volar. Es una prueba
 				if (e.getKeyCode() == KeyEvent.VK_P) {
-					List<String> nombresPJs = new LinkedList<String>();
-					for (PaquetePersonaje pj : cliente.getJuego().getEscuchaMensajes().getPersonajesConectados().values()) {
-						nombresPJs.add(pj.getNombre() + "(" + pj.getId() + ")");
-					}
-					JOptionPane.showMessageDialog(null, String.join("; ", nombresPJs), "Personajes Conectados", JOptionPane.INFORMATION_MESSAGE);
+					MessengerClient MC = new MessengerClient(cliente);
+					MC.crearVentanaCliente();
+//					List<String> nombresPJs = new LinkedList<String>();
+//					for (PaquetePersonaje pj : cliente.getJuego().getEscuchaMensajes().getPersonajesConectados().values()) {
+//						nombresPJs.add(pj.getNombre() + "(" + pj.getId() + ")");
+//					}
+//					JOptionPane.showMessageDialog(null, String.join("; ", nombresPJs), "Personajes Conectados", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 		});
