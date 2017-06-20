@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import juego.Juego;
 import juego.Pantalla;
 import mensajeria.PaqueteBatalla;
+import mensajeria.PaqueteComercio;
 import mensajeria.PaqueteMovimiento;
 import mundo.Grafo;
 import mundo.Mundo;
@@ -164,6 +165,20 @@ public class Entidad {
 
 							try {
 								juego.getCliente().getSalida().writeObject(gson.toJson(pBatalla));
+							} catch (IOException e) {
+								JOptionPane.showMessageDialog(null, "Fallo la conexión con el servidor");
+								e.printStackTrace();
+							}
+						} else if (juego.getEstadoJuego().getTipoSolicitud() == MenuInfoPersonaje.menuComerciar) {
+							PaqueteComercio pComercio = new PaqueteComercio();
+							
+							pComercio.setId(juego.getPersonaje().getId());
+							pComercio.setIdEnemigo(idEnemigo);
+
+							juego.getEstadoJuego().setHaySolicitud(false, null, 0);
+
+							try {
+								juego.getCliente().getSalida().writeObject(gson.toJson(pComercio));
 							} catch (IOException e) {
 								JOptionPane.showMessageDialog(null, "Fallo la conexión con el servidor");
 								e.printStackTrace();

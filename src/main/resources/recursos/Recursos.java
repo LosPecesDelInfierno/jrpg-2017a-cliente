@@ -75,6 +75,7 @@ public class Recursos {
 	public static BufferedImage barraExperiencia;
 	public static BufferedImage menuBatalla;
 	public static BufferedImage menuBatallaDeshabilitado;
+	public static BufferedImage menuMercado;
 
 	public static Map<String, BufferedImage> habilidades = new HashMap<>();
 	// Fin Batalla
@@ -424,6 +425,9 @@ public class Recursos {
 
 		menuBatallaDeshabilitado = CargadorImagen.cargarImagen("/MenuBatallaDeshabilitado.png");
 		actualizarBarraDeCarga(++elementosCargados, menuCarga);
+
+		menuMercado = CargadorImagen.cargarImagen("/mercado/mercado.png");
+		actualizarBarraDeCarga(++elementosCargados, menuCarga);		
 		// Fin Batalla
 	}
 

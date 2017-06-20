@@ -10,11 +10,13 @@ import com.google.gson.Gson;
 
 import estados.Estado;
 import estados.EstadoBatalla;
+import estados.EstadoComercio;
 import juego.Juego;
 import mensajeria.Comando;
 import mensajeria.Paquete;
 import mensajeria.PaqueteAtacar;
 import mensajeria.PaqueteBatalla;
+import mensajeria.PaqueteComercio;
 import mensajeria.PaqueteDeMovimientos;
 import mensajeria.PaqueteDePersonajes;
 import mensajeria.PaqueteFinalizarBatalla;
@@ -47,6 +49,7 @@ public class EscuchaMensajes extends Thread {
 			PaquetePersonaje paquetePersonaje;
 			PaqueteMovimiento personaje;
 			PaqueteBatalla paqueteBatalla;
+			PaqueteComercio paqueteComercio;
 			PaqueteAtacar paqueteAtacar;
 			PaqueteFinalizarBatalla paqueteFinalizarBatalla;
 			personajesConectados = new HashMap<>();
@@ -76,6 +79,14 @@ public class EscuchaMensajes extends Thread {
 					Estado.setEstado(null);
 					juego.setEstadoBatalla(new EstadoBatalla(juego, paqueteBatalla));
 					Estado.setEstado(juego.getEstadoBatalla());
+					break;
+
+				case Comando.COMERCIO:
+					paqueteComercio = gson.fromJson(objetoLeido, PaqueteComercio.class);
+					juego.getPersonaje().setEstado(Estado.estadoComercio);
+					Estado.setEstado(null);
+					juego.setEstadoComercio(new EstadoComercio(juego, paqueteComercio));
+					Estado.setEstado(juego.getEstadoComercio());
 					break;
 
 				case Comando.ATACAR:

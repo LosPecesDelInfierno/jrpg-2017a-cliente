@@ -12,6 +12,7 @@ public abstract class Estado {
 	public static int estadoOffline = 0;
 	public static int estadoJuego = 1;
 	public static int estadoBatalla = 2;
+	public static int estadoComercio = 3;
 
 	protected Juego juego;
 
