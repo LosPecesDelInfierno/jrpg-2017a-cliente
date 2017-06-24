@@ -39,12 +39,15 @@ public class Pantalla {
 	private Canvas canvas;
 	private InventarioPersonaje inventario;
 	private VentanaChat chat;
+	public MessengerClient MC;
+	private Cliente cliente;
 
 	private final Gson gson = new Gson();
 
 	public Pantalla(final String NOMBRE, final int ANCHO, final int ALTO, final Cliente cliente) {
 		pantalla = new JFrame(NOMBRE);
-
+		this.cliente = cliente;
+		
 		pantalla.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
 				new ImageIcon(MenuJugar.class.getResource("/cursor.png")).getImage(), new Point(0, 0),
 				"custom cursor"));
@@ -85,15 +88,6 @@ public class Pantalla {
 						inventario.dispose();
 						inventario = null;
 					}
-				} else if (e.getKeyCode() == KeyEvent.VK_C) {
-//					if (chat == null) {
-//						chat = new VentanaChat("Federico");
-//						chat.setLocationRelativeTo(pantalla);
-//						chat.setVisible(true);
-//					} else {
-//						chat.dispose();
-//						chat = null;
-//					}
 				}
 				
 				// TODO: Mandar a la ventana de chat, que es la que tiene que llevar esta lógica
@@ -107,15 +101,12 @@ public class Pantalla {
 				}
 				
 				// Muestro los personajes conectados
-				// TODO: Volar. Es una prueba
 				if (e.getKeyCode() == KeyEvent.VK_P) {
-					MessengerClient MC = new MessengerClient(cliente);
-					MC.crearVentanaCliente();
-//					List<String> nombresPJs = new LinkedList<String>();
-//					for (PaquetePersonaje pj : cliente.getJuego().getEscuchaMensajes().getPersonajesConectados().values()) {
-//						nombresPJs.add(pj.getNombre() + "(" + pj.getId() + ")");
-//					}
-//					JOptionPane.showMessageDialog(null, String.join("; ", nombresPJs), "Personajes Conectados", JOptionPane.INFORMATION_MESSAGE);
+					if(MC == null) {
+						MC = new MessengerClient(cliente);
+						MC.crearVentanaCliente();
+					}
+					MC.setVisible();
 				}
 			}
 		});
@@ -155,5 +146,13 @@ public class Pantalla {
 		int b = (r.height / 2) - (rHeight / 2) - rY;
 
 		g.drawString(s, r.x + a, r.y + b);
+	}
+	
+	public MessengerClient getMessengetClient() {
+		if(MC == null) {
+			MC = new MessengerClient(cliente);
+			MC.crearVentanaCliente();
+		}
+		return MC;
 	}
 }

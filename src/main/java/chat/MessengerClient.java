@@ -50,8 +50,6 @@ public class MessengerClient extends Thread {
 	//private EscuchaMensajes escuchaMensajes;
 	private String username;
 	//private ArchivoDePropiedades properties;
-	private ObjectInputStream in;
-	private ObjectOutputStream out; 
 	
 	private JMenu mnChat;
 	private JMenuItem mntmConfigIpPuerto;
@@ -59,11 +57,12 @@ public class MessengerClient extends Thread {
 	private JMenuItem mntmConectar;
 	private JPanel contentPane;
 	private JList<String> listUsuarios;
-	private Map<String, VentanaChat> chatsAbiertos;
+	private Map<Integer, VentanaChat> chatsAbiertos;
 	private JLabel lblUsuarios;
 	private JFrame VC;
 	private Cliente cliente;
 	private JTextField textFieldDifusion;
+	private JTextArea textAreaDifusion;
 	private final Gson gson = new Gson();
 	
 	public MessengerClient(Cliente cliente) {
@@ -139,14 +138,8 @@ public class MessengerClient extends Thread {
 	 * @wbp.parser.entryPoint
 	 */
 	public void crearVentanaCliente() {
-		chatsAbiertos = new HashMap<String, VentanaChat>();
+		chatsAbiertos = new HashMap<Integer, VentanaChat>();
 		VC = new JFrame();
-//		VC.addWindowListener(new WindowAdapter() {
-//			@Override
-//			public void windowClosing(WindowEvent arg0) {
-////				abrirVentanaConfirmaSalir();
-//			}
-//		});
 		
 		try
 		{
@@ -244,7 +237,8 @@ public class MessengerClient extends Thread {
 		scrollPane_1.setBounds(0, 0, 373, 181);
 		contentPane.add(scrollPane_1);
 		
-		JTextArea textAreaDifusion = new JTextArea();
+		textAreaDifusion = new JTextArea();
+		textAreaDifusion.setEditable(false);
 		scrollPane_1.setViewportView(textAreaDifusion);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -273,6 +267,7 @@ public class MessengerClient extends Thread {
 					PaqueteMensaje mensaje = new PaqueteMensaje(cliente.getJuego().getPersonaje().getId(), textFieldDifusion.getText());
 					try {
 						cliente.getSalida().writeObject(gson.toJson(mensaje));
+						cliente.getSalida().flush();
 					} catch (Exception e2) {
 						e2.printStackTrace();
 					}
@@ -300,7 +295,10 @@ public class MessengerClient extends Thread {
 		contentPane.add(btnDifusion);
 		
 		setUsuariosEnLista();
-		//actualizarVentana(false);
+
+	}
+	
+	public void setVisible() {
 		VC.setVisible(true);
 	}
 	
@@ -346,7 +344,7 @@ public class MessengerClient extends Thread {
 
 		for (PaquetePersonaje pj : cliente.getJuego().getEscuchaMensajes().getPersonajesConectados().values()) {
 			if(!pj.getNombre().equals(this.username)) {
-				modeloLista.addElement(pj.getNombre() + "(" + pj.getId() + ")");
+				modeloLista.addElement(pj.getId() + "-" + pj.getNombre());
 			}
 		}
 		txtUsuarios = modeloLista.isEmpty() ? "No hay nadie conectado" : "Cantidad de Usuarios Conectados: " + modeloLista.getSize();
@@ -355,8 +353,10 @@ public class MessengerClient extends Thread {
 	}
 	
 	private void seleccionarElementoLista() {
-		if(!listUsuarios.isSelectionEmpty())
-			getChatWindow(listUsuarios.getSelectedValue());
+		if(!listUsuarios.isSelectionEmpty()) {
+			String[] datosUsuario = listUsuarios.getSelectedValue().split("-");
+			getChatWindow(Integer.parseInt(datosUsuario[0]), datosUsuario[1]);
+		}
 		//else
 			//mostrarDialog("Seleccione un elemento de la lista", "Seleccionar Usuario", JOptionPane.INFORMATION_MESSAGE);
 	}
@@ -370,35 +370,37 @@ public class MessengerClient extends Thread {
 			seleccionarElementoLista();
 	}
 	
-	private VentanaChat getChatWindow(String user) {
-    	if (!chatsAbiertos.containsKey(user)) {
-    		chatsAbiertos.put(user, openChatWindow(user));
+	public VentanaChat getChatWindow(int idUser, String username) {
+    	if (!chatsAbiertos.containsKey(idUser)) {
+    		chatsAbiertos.put(idUser, openChatWindow(idUser, username));
     	}
-    	return chatsAbiertos.get(user);
+    	return chatsAbiertos.get(idUser);
     }
 	
-	private VentanaChat openChatWindow(String recipient) {
-		VentanaChat ventanaChat = new VentanaChat(this, recipient);
+	private VentanaChat openChatWindow(int idUser, String username) {
+		VentanaChat ventanaChat = new VentanaChat(this, idUser, username);
 		
 		ventanaChat.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosed(WindowEvent e) {
-				chatsAbiertos.remove(ventanaChat.getUsuarioDestino());
+				chatsAbiertos.remove(ventanaChat.getIdUsuarioDestino());
 			}
 		});
 		ventanaChat.setVisible(true);
 		return ventanaChat;
 	}
-	
-//	protected synchronized void recibirMensaje(Message msg) {
-//		String chatName = msg.getType().equals(MessageType.DIFUSION) ? "SALA" : msg.getSender();
-//		getChatWindow(chatName).recibirMensaje(msg.getSender(), msg.getContent());
-//	}
 
-	protected synchronized void enviarMensaje(String texto, String destinatario) throws IOException {
-		//MessageType tipoMensaje = destinatario.equals("SALA") ? MessageType.DIFUSION : MessageType.MENSAJE;
-		
-		//out.writeObject(new Message(tipoMensaje, this.username, texto, destinatario));
-    	//out.flush();
+	protected synchronized void enviarMensaje(String texto, int idDestinatario) throws IOException {
+		PaqueteMensaje msg = new PaqueteMensaje((int)cliente.getId(), idDestinatario, texto);
+		cliente.getSalida().writeObject(gson.toJson(msg));
+		cliente.getSalida().flush();
+	}
+	
+	public void recibirMensaje(PaqueteMensaje paqueteMensaje, String emisor) {
+		if(paqueteMensaje.esDifusion()) {
+			textAreaDifusion.append(emisor + " > " + paqueteMensaje.getContenido() + "\n");
+		} else {
+			getChatWindow(paqueteMensaje.getIdEmisor(), emisor).recibirMensaje(emisor, paqueteMensaje.getContenido());
+		}
 	}
 }

@@ -34,14 +34,16 @@ public class VentanaChat extends JFrame {
 	private JTextField txtAsda;
 	private JButton btnEnviar;
 	private JTextArea textArea;
+	private int idUsuarioDestinoChat;
 	private String usuarioDestinoChat;
 	private JLabel lblNewLabel;
 	private MessengerClient cliente;
 
-	public VentanaChat(MessengerClient cliente, String usuarioDestinoChat) {
+	public VentanaChat(MessengerClient cliente, int idUsuarioDestinoChat, String usuarioDestinoChat) {
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);		
 		
 		this.cliente = cliente;
+		this.idUsuarioDestinoChat = idUsuarioDestinoChat;
 		this.usuarioDestinoChat = usuarioDestinoChat;
 		setTitle(usuarioDestinoChat);
 		setResizable(false);
@@ -90,12 +92,13 @@ public class VentanaChat extends JFrame {
 		btnEnviar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				escribeEnTextArea();
+				
 			}
 		});
 		contentPane.add(btnEnviar);
 		
 		lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon("C:\\Users\\VisionStudio\\Documents\\Github\\ProgramacionAvanzada\\jrpg-2017a-cliente\\recursos\\mercado\\fondoChatSinBE.png"));
+		lblNewLabel.setIcon(new ImageIcon("/recursos/mercado/fondoChatSinBE.png"));
 		lblNewLabel.setBounds(0, 0, 634, 445);
 		contentPane.add(lblNewLabel);
 
@@ -108,8 +111,8 @@ public class VentanaChat extends JFrame {
 		textArea.setCaretPosition(textArea.getText().length());
 		String mensaje = txtAsda.getText();
 		try {
-			cliente.enviarMensaje(mensaje, this.usuarioDestinoChat);
-			// Si mand� difusi�n, me va a llegar a mi tambi�n
+			cliente.enviarMensaje(mensaje, this.idUsuarioDestinoChat);
+			
 			if (this.usuarioDestinoChat != "SALA") 
 				recibirMensaje("YO", mensaje);
 			txtAsda.setText("");
@@ -126,6 +129,10 @@ public class VentanaChat extends JFrame {
 	
 	public String getUsuarioDestino() {
 		return this.usuarioDestinoChat;
+	}
+	
+	public int getIdUsuarioDestino() {
+		return this.idUsuarioDestinoChat;
 	}
 	
 	private void hacerFocoTextField(JTextField textField) {

@@ -13,6 +13,7 @@ import estados.Estado;
 import estados.EstadoBatalla;
 import estados.EstadoComercio;
 import estados.EstadoJuego;
+import mensajeria.Comando;
 import mensajeria.PaqueteMensaje;
 import mensajeria.PaqueteMovimiento;
 import mensajeria.PaquetePersonaje;
@@ -254,10 +255,7 @@ public class Juego implements Runnable {
 	public void recibirMensaje(PaqueteMensaje paqueteMensaje) {
 		// IDEA: Cambiar color del texto según tipo (ej: difusión en negro, privado en amarillo)
 		// TODO: Mandar esto donde corresponda.
-		String emisor = escuchaMensajes.getPersonajesConectados().get(paqueteMensaje.getIdEmisor()).getNombre(); 
-		String textoChat = emisor + 
-				(paqueteMensaje.esDifusion() ? " (DIFUSIÓN) " : "") + 
-				": " + paqueteMensaje.getContenido();
-		JOptionPane.showMessageDialog(null, textoChat);
+		String emisor = paqueteMensaje.esDifusion() ? "" : escuchaMensajes.getPersonajesConectados().get(paqueteMensaje.getIdEmisor()).getNombre();
+		pantalla.getMessengetClient().recibirMensaje(paqueteMensaje, emisor);
 	}
 }
