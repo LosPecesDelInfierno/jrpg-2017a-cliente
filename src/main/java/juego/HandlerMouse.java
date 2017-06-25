@@ -22,6 +22,8 @@ public class HandlerMouse implements MouseListener {
 			posMouse[1] = e.getY();
 			nuevoClick = true;
 		} else if (e.getButton() == MouseEvent.BUTTON3) {
+			posMouse[0] = e.getX();
+			posMouse[1] = e.getY();
 			posMouseRecorrido[0] = e.getX();
 			posMouseRecorrido[1] = e.getY();
 			nuevoRecorrido = true;
@@ -64,6 +66,16 @@ public class HandlerMouse implements MouseListener {
 		nuevoRecorrido = b;
 	}
 
+	// Internamente, click derecho y recorrido son lo mismo,
+	// se duplican los metodos para mayor claridad de codigo
+	public boolean getNuevoClickDerecho() {
+		return nuevoRecorrido;
+	}
+
+	public void setNuevoClickDerecho(boolean b) {
+		nuevoRecorrido = b;
+	}
+	
 	public boolean getNuevoClick() {
 		return nuevoClick;
 	}

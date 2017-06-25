@@ -75,11 +75,16 @@ public class Recursos {
 	public static BufferedImage barraExperiencia;
 	public static BufferedImage menuBatalla;
 	public static BufferedImage menuBatallaDeshabilitado;
-	public static BufferedImage menuMercado;
-
 	public static Map<String, BufferedImage> habilidades = new HashMap<>();
 	// Fin Batalla
 
+	//Mercado
+	public static BufferedImage menuMercado;
+	public static BufferedImage checkItem;
+	// Fin Mercado
+
+
+	
 	// Se cargan todos los recursos del juego una sola vez al inicio
 
 	public static void cargar(MenuCarga menuCarga) {
@@ -425,10 +430,15 @@ public class Recursos {
 
 		menuBatallaDeshabilitado = CargadorImagen.cargarImagen("/MenuBatallaDeshabilitado.png");
 		actualizarBarraDeCarga(++elementosCargados, menuCarga);
-
+		// Fin Batalla
+		
+		// Inicio Mercado
 		menuMercado = CargadorImagen.cargarImagen("/mercado/mercado.png");
 		actualizarBarraDeCarga(++elementosCargados, menuCarga);		
-		// Fin Batalla
+
+		checkItem = CargadorImagen.cargarImagen("/mercado/check.png");
+		actualizarBarraDeCarga(++elementosCargados, menuCarga);		
+		// Fin Mercado
 	}
 
 	private static void actualizarBarraDeCarga(int elementosCargados, MenuCarga menuCarga) {

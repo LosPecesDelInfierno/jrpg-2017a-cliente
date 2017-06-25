@@ -24,13 +24,8 @@ public class EstadoComercio extends Estado {
 //	private PaqueteAtacar paqueteAtacar;
 //	private PaqueteFinalizarBatalla paqueteFinalizarBatalla;
 	private boolean miTurno;
-	private boolean haySpellSeleccionada;
-	private boolean seRealizoAccion;
 
 	private Gson gson = new Gson();
-
-//	private BufferedImage miniaturaPersonaje;
-//	private BufferedImage miniaturaEnemigo;
 
 	private MenuComercio menuComercio;
 
@@ -43,9 +38,6 @@ public class EstadoComercio extends Estado {
 		paqueteEnemigo = juego.getEscuchaMensajes().getPersonajesConectados().get(paqueteComercio.getIdEnemigo());
 
 		menuComercio = new MenuComercio(miTurno, paquetePersonaje, paqueteEnemigo);
-
-//		miniaturaEnemigo = Recursos.personaje.get(enemigo.getNombreRaza()).get(5)[0];
-//		miniaturaPersonaje = Recursos.personaje.get(personaje.getNombreRaza()).get(5)[0];
 
 //		paqueteFinalizarBatalla = new PaqueteFinalizarBatalla();
 //		paqueteFinalizarBatalla.setId(personaje.getIdPersonaje());
@@ -65,21 +57,37 @@ public class EstadoComercio extends Estado {
 		juego.getCamara().setxOffset(-350);
 		juego.getCamara().setyOffset(150);
 
-		seRealizoAccion = false;
-		haySpellSeleccionada = false;
-
 		if (miTurno) {
 
+			int boton;
+			
+			if (juego.getHandlerMouse().getNuevoClickDerecho()) {
+				posMouse = juego.getHandlerMouse().getPosMouse();
+
+				boton = menuComercio.getBotonClickeado(posMouse[0], posMouse[1]);
+				
+				if( boton >= 0 && boton <= 15 ) {
+					menuComercio.printInfoItem(boton);
+				}
+				
+				juego.getHandlerMouse().setNuevoClickDerecho(false);
+			}
+			
 			if (juego.getHandlerMouse().getNuevoClick()) {
 				posMouse = juego.getHandlerMouse().getPosMouse();
 
-				//TODO: Capturar clics en menuComercio
+				boton = menuComercio.getBotonClickeado(posMouse[0], posMouse[1]);
 				
-				if (haySpellSeleccionada && seRealizoAccion) {
-					//TODO: Armar paqueteIntercambiar
+				if( boton >= 0 && boton <= 15 ) {
+					menuComercio.printInfoItem(boton);
+					menuComercio.activarBoton(boton);
 				}
 				
-
+				// boton aceptar
+				if( boton == menuComercio.ACEPTAR ) {
+					// TODO: 
+				}
+				
 				juego.getHandlerMouse().setNuevoClick(false);
 			}
 		}
