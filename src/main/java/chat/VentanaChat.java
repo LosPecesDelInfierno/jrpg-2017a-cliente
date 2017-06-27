@@ -39,21 +39,13 @@ public class VentanaChat extends JFrame {
 	private JLabel lblNewLabel;
 	private MessengerClient cliente;
 
-	public VentanaChat(MessengerClient cliente, int idUsuarioDestinoChat, String usuarioDestinoChat) {
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);		
+	public VentanaChat(MessengerClient cliente, int idUsuarioDestinoChat, String usuarioDestinoChat) {	
 		
 		this.cliente = cliente;
 		this.idUsuarioDestinoChat = idUsuarioDestinoChat;
 		this.usuarioDestinoChat = usuarioDestinoChat;
 		setTitle(usuarioDestinoChat);
 		setResizable(false);
-		
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent arg0) {
-				mostrarVentanaConfirmacion();
-			}
-		});
 		
 		setBounds(100, 100, 640, 480);
 		contentPane = new JPanel();
@@ -98,7 +90,7 @@ public class VentanaChat extends JFrame {
 		contentPane.add(btnEnviar);
 		
 		lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon("/recursos/mercado/fondoChatSinBE.png"));
+		lblNewLabel.setIcon(new ImageIcon("./recursos/mercado/fondoChatSinBE.png"));
 		lblNewLabel.setBounds(0, 0, 634, 445);
 		contentPane.add(lblNewLabel);
 
@@ -119,12 +111,6 @@ public class VentanaChat extends JFrame {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, "Hubo un problema al enviar el mensaje. Intente nuevamente");
 		}
-	}
-	
-	private void mostrarVentanaConfirmacion() {
-		int res = JOptionPane.showConfirmDialog(this, "Desea salir de la sesi�n de chat?", "Confirmar cerrar", JOptionPane.YES_NO_OPTION);
-		if(res == JOptionPane.YES_OPTION)
-			dispose();
 	}
 	
 	public String getUsuarioDestino() {

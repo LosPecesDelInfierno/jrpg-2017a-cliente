@@ -64,6 +64,7 @@ public class MessengerClient extends Thread {
 	private JTextField textFieldDifusion;
 	private JTextArea textAreaDifusion;
 	private final Gson gson = new Gson();
+	private VentanaChat ventanaChat;
 	
 	public MessengerClient(Cliente cliente) {
 		this.cliente = cliente;
@@ -374,24 +375,25 @@ public class MessengerClient extends Thread {
     	if (!chatsAbiertos.containsKey(idUser)) {
     		chatsAbiertos.put(idUser, openChatWindow(idUser, username));
     	}
+    	ventanaChat.setVisible(true);
     	return chatsAbiertos.get(idUser);
     }
 	
 	private VentanaChat openChatWindow(int idUser, String username) {
-		VentanaChat ventanaChat = new VentanaChat(this, idUser, username);
+		ventanaChat = new VentanaChat(this, idUser, username);
 		
-		ventanaChat.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosed(WindowEvent e) {
-				chatsAbiertos.remove(ventanaChat.getIdUsuarioDestino());
-			}
-		});
-		ventanaChat.setVisible(true);
+//		ventanaChat.addWindowListener(new WindowAdapter() {
+//			@Override
+//			public void windowClosed(WindowEvent e) {
+//				chatsAbiertos.remove(ventanaChat.getIdUsuarioDestino());
+//			}
+//		});
+		//ventanaChat.setVisible(true);
 		return ventanaChat;
 	}
 
 	protected synchronized void enviarMensaje(String texto, int idDestinatario) throws IOException {
-		PaqueteMensaje msg = new PaqueteMensaje((int)cliente.getId(), idDestinatario, texto);
+		PaqueteMensaje msg = new PaqueteMensaje(cliente.getPaquetePersonaje().getId(), idDestinatario, texto);
 		cliente.getSalida().writeObject(gson.toJson(msg));
 		cliente.getSalida().flush();
 	}

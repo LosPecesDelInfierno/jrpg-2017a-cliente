@@ -255,7 +255,7 @@ public class Juego implements Runnable {
 	public void recibirMensaje(PaqueteMensaje paqueteMensaje) {
 		// IDEA: Cambiar color del texto según tipo (ej: difusión en negro, privado en amarillo)
 		// TODO: Mandar esto donde corresponda.
-		String emisor = paqueteMensaje.esDifusion() ? "" : escuchaMensajes.getPersonajesConectados().get(paqueteMensaje.getIdEmisor()).getNombre();
+		String emisor = escuchaMensajes.getPersonajesConectados().get(paqueteMensaje.getIdEmisor()).getNombre();
 		pantalla.getMessengetClient().recibirMensaje(paqueteMensaje, emisor);
 	}
 }
