@@ -87,7 +87,6 @@ public class MenuComercio {
 			}
 		}
 
-		
 		// Dibujo las informaciones
 		g.setFont(new Font("Book Antiqua", 0, 10));
 		g.setColor(Color.WHITE);
@@ -121,10 +120,16 @@ public class MenuComercio {
 		return SIN_USO;
 	}
 
-	public void activarBoton(int boton) {
-		if (habilitado && botonEnUso[boton]) {
-			botonActivo[boton] = !botonActivo[boton];
-		}
+	public boolean getEstadoBoton(int boton) {
+		return botonActivo[boton];
+	}
+	
+	public void setEstadoBoton(int boton, boolean estado) {
+		botonActivo[boton] = habilitado && botonEnUso[boton] && estado;
+	}
+	
+	public void clickEnBoton(int boton) {
+		botonActivo[boton] = habilitado && botonEnUso[boton] && !botonActivo[boton];
 	}
 
 	public void printInfoItem(int boton) {

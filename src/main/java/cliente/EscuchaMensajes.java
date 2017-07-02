@@ -20,6 +20,7 @@ import mensajeria.PaqueteComercio;
 import mensajeria.PaqueteDeMovimientos;
 import mensajeria.PaqueteDePersonajes;
 import mensajeria.PaqueteFinalizarBatalla;
+import mensajeria.PaqueteIntercambio;
 import mensajeria.PaqueteMensaje;
 import mensajeria.PaqueteMovimiento;
 import mensajeria.PaquetePersonaje;
@@ -49,9 +50,10 @@ public class EscuchaMensajes extends Thread {
 			PaquetePersonaje paquetePersonaje;
 			PaqueteMovimiento personaje;
 			PaqueteBatalla paqueteBatalla;
-			PaqueteComercio paqueteComercio;
 			PaqueteAtacar paqueteAtacar;
 			PaqueteFinalizarBatalla paqueteFinalizarBatalla;
+			PaqueteComercio paqueteComercio;
+			PaqueteIntercambio paqueteIntercambio;
 			personajesConectados = new HashMap<>();
 			ubicacionPersonajes = new HashMap<>();
 
@@ -81,14 +83,6 @@ public class EscuchaMensajes extends Thread {
 					Estado.setEstado(juego.getEstadoBatalla());
 					break;
 
-				case Comando.COMERCIO:
-					paqueteComercio = gson.fromJson(objetoLeido, PaqueteComercio.class);
-					juego.getPersonaje().setEstado(Estado.estadoComercio);
-					Estado.setEstado(null);
-					juego.setEstadoComercio(new EstadoComercio(juego, paqueteComercio));
-					Estado.setEstado(juego.getEstadoComercio());
-					break;
-
 				case Comando.ATACAR:
 					paqueteAtacar = (PaqueteAtacar) gson.fromJson(objetoLeido, PaqueteAtacar.class);
 					juego.getEstadoBatalla().getEnemigo().refreshAtacante(paqueteAtacar);
@@ -101,6 +95,21 @@ public class EscuchaMensajes extends Thread {
 							PaqueteFinalizarBatalla.class);
 					juego.getPersonaje().setEstado(Estado.estadoJuego);
 					Estado.setEstado(juego.getEstadoJuego());
+					break;
+					
+				case Comando.COMERCIO:
+					paqueteComercio = gson.fromJson(objetoLeido, PaqueteComercio.class);
+					juego.getPersonaje().setEstado(Estado.estadoComercio);
+					Estado.setEstado(null);
+					juego.setEstadoComercio(new EstadoComercio(juego, paqueteComercio));
+					Estado.setEstado(juego.getEstadoComercio());
+					break;
+
+				case Comando.INTERCAMBIAR:
+					paqueteIntercambio = gson.fromJson(objetoLeido, PaqueteIntercambio.class);
+					juego.getEstadoComercio().recibirPaqueteIntercambio(paqueteIntercambio);
+					juego.getEstadoComercio().setMiTurno(true);
+					juego.getEstadoComercio().actualizarBotonesActivos();
 					break;
 					
 				case Comando.MENSAJE:
