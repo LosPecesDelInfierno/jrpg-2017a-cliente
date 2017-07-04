@@ -172,6 +172,7 @@ public class Cliente extends Thread {
 //							// El usuario no pudo iniciar sesi�n
 //							paqueteUsuario.setInicioSesion(false);
 //						}
+						// Esto deberia ir fuera, sin switch.
 						proceso.procesar(cadenaLeida);
 						
 						break;
