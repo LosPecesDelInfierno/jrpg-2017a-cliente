@@ -11,6 +11,10 @@ import javax.swing.JOptionPane;
 
 import com.google.gson.Gson;
 
+import comunicacion.ComandoDesconocidoException;
+import comunicacion.ContextoProcesador;
+import comunicacion.Procesador;
+import comunicacion.ProcesadorFactory;
 import frames.*;
 import juego.Juego;
 import mensajeria.Comando;
@@ -20,7 +24,7 @@ import mensajeria.PaqueteUsuario;
 
 public class Cliente extends Thread {
 
-	private Socket cliente;
+	private Socket socketCliente;
 	private String miIp;
 	private ObjectInputStream entrada;
 	private ObjectOutputStream salida;
@@ -53,10 +57,10 @@ public class Cliente extends Thread {
 	public Cliente(String ip, int puerto) {
 
 		try {
-			cliente = new Socket(ip, puerto);
-			miIp = cliente.getInetAddress().getHostAddress();
-			entrada = new ObjectInputStream(cliente.getInputStream());
-			salida = new ObjectOutputStream(cliente.getOutputStream());
+			socketCliente = new Socket(ip, puerto);
+			miIp = socketCliente.getInetAddress().getHostAddress();
+			entrada = new ObjectInputStream(socketCliente.getInputStream());
+			salida = new ObjectOutputStream(socketCliente.getOutputStream());
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "Fallo al iniciar la aplicación. Revise la conexión con el servidor.");
 			System.exit(1);
@@ -79,10 +83,10 @@ public class Cliente extends Thread {
 		}
 
 		try {
-			cliente = new Socket(ip, puerto);
-			miIp = cliente.getInetAddress().getHostAddress();
-			entrada = new ObjectInputStream(cliente.getInputStream());
-			salida = new ObjectOutputStream(cliente.getOutputStream());
+			socketCliente = new Socket(ip, puerto);
+			miIp = socketCliente.getInetAddress().getHostAddress();
+			entrada = new ObjectInputStream(socketCliente.getInputStream());
+			salida = new ObjectOutputStream(socketCliente.getOutputStream());
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "Fallo al iniciar la aplicación. Revise la conexión con el servidor.");
 			System.exit(1);
@@ -129,71 +133,77 @@ public class Cliente extends Thread {
 					// Recibo el paquete desde el servidor
 					String cadenaLeida = (String) entrada.readObject();
 					Paquete paquete = gson.fromJson(cadenaLeida, Paquete.class);
-
-					switch (paquete.getComando()) {
-
-					case Comando.REGISTRO:
-						if (paquete.getMensaje().equals(Paquete.msjExito)) {
-
-							// Abro el menu para la creaci�n del personaje
-							MenuCreacionPj menuCreacionPJ = new MenuCreacionPj(this, paquetePersonaje);
-							menuCreacionPJ.setVisible(true);
-
-							// Espero a que el usuario cree el personaje
-							wait();
-
-							// Le envio los datos al servidor
-							paquetePersonaje.setUsuario(this.paqueteUsuario.getUsername());
-							paquetePersonaje.setComando(Comando.CREACIONPJ);
-							salida.writeObject(gson.toJson(paquetePersonaje));
-							JOptionPane.showMessageDialog(null, "Registro exitoso.");
-
-							// Recibo el paquete personaje con los datos (la id
-							// incluida)
-							paquetePersonaje = (PaquetePersonaje) gson.fromJson((String) entrada.readObject(),
-									PaquetePersonaje.class);
-
-							// Indico que el usuario ya inicio sesion
-							paqueteUsuario.setInicioSesion(true);
-
-						} else {
-							if (paquete.getMensaje().equals(Paquete.msjFracaso))
-								JOptionPane.showMessageDialog(null, "No se pudo registrar.");
-
-							// El usuario no pudo iniciar sesi�n
-							paqueteUsuario.setInicioSesion(false);
-						}
-						break;
-
-					case Comando.INICIOSESION:
-						if (paquete.getMensaje().equals(Paquete.msjExito)) {
-
-							// El usuario ya inicio sesión
-							paqueteUsuario.setInicioSesion(true);
-
-							// Recibo el paquete personaje con los datos
-							paquetePersonaje = (PaquetePersonaje) gson.fromJson(cadenaLeida, PaquetePersonaje.class);
-
-						} else {
-							if (paquete.getMensaje().equals(Paquete.msjFracaso))
-								JOptionPane.showMessageDialog(null,
-										"Error al iniciar sesión. Revise el usuario y la contraseña");
-
-							// El usuario no pudo iniciar sesi�n
-							paqueteUsuario.setInicioSesion(false);
-						}
-						break;
-
-					case Comando.SALIR:
-						// El usuario no pudo iniciar sesi�n
-						paqueteUsuario.setInicioSesion(false);
-						salida.writeObject(gson.toJson(new Paquete(Comando.DESCONECTAR), Paquete.class));
-						cliente.close();
-						break;
-
-					default:
-						break;
-					}
+					ContextoProcesador contextoProcesador = new ContextoProcesador(paquete, paquetePersonaje, paqueteUsuario, 
+							entrada, salida, this, socketCliente);
+					Procesador proceso = ProcesadorFactory.crear(paqueteUsuario.getComando(), contextoProcesador, gson);
+					proceso.procesar(cadenaLeida);
+					do{
+					}while(!contextoProcesador.getPaqueteUsuario().isInicioSesion());
+//					switch (paquete.getComando()) {
+//
+//					case Comando.REGISTRO:
+////						if (paquete.getMensaje().equals(Paquete.msjExito)) {
+////
+////							// Abro el menu para la creaci�n del personaje
+////							MenuCreacionPj menuCreacionPJ = new MenuCreacionPj(this, paquetePersonaje, contextoProcesador);
+////							menuCreacionPJ.setVisible(true);
+////
+////							// Espero a que el usuario cree el personaje
+////							wait();
+////
+////							// Le envio los datos al servidor
+////							paquetePersonaje.setUsuario(this.paqueteUsuario.getUsername());
+////							paquetePersonaje.setComando(Comando.CREACIONPJ);
+////							salida.writeObject(gson.toJson(paquetePersonaje));
+////							JOptionPane.showMessageDialog(null, "Registro exitoso.");
+////
+////							// Recibo el paquete personaje con los datos (la id
+////							// incluida)
+////							paquetePersonaje = (PaquetePersonaje) gson.fromJson((String) entrada.readObject(),
+////									PaquetePersonaje.class);
+////
+////							// Indico que el usuario ya inicio sesion
+////							paqueteUsuario.setInicioSesion(true);
+////
+////						} else {
+////							if (paquete.getMensaje().equals(Paquete.msjFracaso))
+////								JOptionPane.showMessageDialog(null, "No se pudo registrar.");
+////
+////							// El usuario no pudo iniciar sesi�n
+////							paqueteUsuario.setInicioSesion(false);
+////						}
+//						proceso.procesar(cadenaLeida);
+//						break;
+//
+//					case Comando.INICIOSESION:
+////						if (paquete.getMensaje().equals(Paquete.msjExito)) {
+////
+////							// El usuario ya inicio sesión
+////							paqueteUsuario.setInicioSesion(true);
+////
+////							// Recibo el paquete personaje con los datos
+////							paquetePersonaje = (PaquetePersonaje) gson.fromJson(cadenaLeida, PaquetePersonaje.class);
+////
+////						} else {
+////							if (paquete.getMensaje().equals(Paquete.msjFracaso))
+////								JOptionPane.showMessageDialog(null,
+////										"Error al iniciar sesión. Revise el usuario y la contraseña");
+////
+////							// El usuario no pudo iniciar sesi�n
+////							paqueteUsuario.setInicioSesion(false);
+////						}
+//						break;
+//
+//					case Comando.SALIR:
+//						// El usuario no pudo iniciar sesi�n
+////						paqueteUsuario.setInicioSesion(false);
+////						salida.writeObject(gson.toJson(new Paquete(Comando.DESCONECTAR), Paquete.class));
+////						socketCliente.close();
+//						break;
+//
+//					default:
+//						break;
+//					}
 
 				}
 
@@ -229,7 +239,7 @@ public class Cliente extends Thread {
 				// Finalizo el menu de carga
 				menuCarga.dispose();
 
-			} catch (IOException | InterruptedException | ClassNotFoundException e) {
+			} catch (IOException | InterruptedException | ClassNotFoundException | ComandoDesconocidoException e) {
 				JOptionPane.showMessageDialog(null, "Fallo la conexión con el servidor durante el inicio de sesión.");
 				System.exit(1);
 				e.printStackTrace();
@@ -239,11 +249,11 @@ public class Cliente extends Thread {
 	}
 
 	public Socket getSocket() {
-		return cliente;
+		return socketCliente;
 	}
 
 	public void setSocket(Socket cliente) {
-		this.cliente = cliente;
+		this.socketCliente = cliente;
 	}
 
 	public String getMiIp() {
