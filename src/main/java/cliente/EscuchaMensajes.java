@@ -110,6 +110,7 @@ public class EscuchaMensajes extends Thread {
 					juego.getEstadoComercio().recibirPaqueteIntercambio(paqueteIntercambio);
 					juego.getEstadoComercio().setMiTurno(true);
 					juego.getEstadoComercio().actualizarBotonesActivos();
+					juego.getEstadoComercio().proponerIntercambio();
 					break;
 					
 				case Comando.MENSAJE:

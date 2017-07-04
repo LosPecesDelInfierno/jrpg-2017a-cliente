@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 
 import dominio.Item;
 import interfaz.MenuComercio;
+import interfaz.MenuIntercambio;
 import juego.Juego;
 import mensajeria.PaqueteComercio;
 import mensajeria.PaqueteIntercambio;
@@ -28,10 +29,12 @@ public class EstadoComercio extends Estado {
 	private PaqueteIntercambio paqueteIntercambio;
 
 	private boolean miTurno;
+	private boolean hayPropuesta;
 
 	private Gson gson = new Gson();
 
 	private MenuComercio menuComercio;
+	private MenuIntercambio menuIntercambio;
 
 	public EstadoComercio(Juego juego, PaqueteComercio paqueteComercio) {
 		super(juego);
@@ -46,7 +49,11 @@ public class EstadoComercio extends Estado {
 		paqueteIntercambio = new PaqueteIntercambio();
 		paqueteIntercambio.setId(paqueteComercio.getId());
 		paqueteIntercambio.setIdEnemigo(paqueteComercio.getIdEnemigo());
+		paqueteIntercambio.setNombre(paqueteEnemigo.getNombre());
 
+		// por defecto no hay intercambio propuesto
+		hayPropuesta = false;
+		
 		// limpio la accion del mouse
 		juego.getHandlerMouse().setNuevoClick(false);
 
@@ -57,6 +64,15 @@ public class EstadoComercio extends Estado {
 
 		juego.getCamara().setxOffset(-350);
 		juego.getCamara().setyOffset(150);
+
+		if(hayPropuesta) {
+			handlerIntercambio();
+		} else {
+			handlerComercio();
+		}
+	}
+	
+	public void handlerComercio() {
 
 		if (miTurno) {
 
@@ -86,7 +102,6 @@ public class EstadoComercio extends Estado {
 
 				// boton aceptar
 				if (boton == menuComercio.ACEPTAR) {
-					// TODO: por el momento intercambio turnos para probar
 					armarPaqueteIntercambio();
 					enviarPaqueteIntercambio();
 					setMiTurno(false);
@@ -95,7 +110,11 @@ public class EstadoComercio extends Estado {
 				juego.getHandlerMouse().setNuevoClick(false);
 			}
 		}
-
+		
+	}
+	
+	public void handlerIntercambio() {
+		
 	}
 
 	@Override
@@ -109,7 +128,14 @@ public class EstadoComercio extends Estado {
 		g.drawImage(Recursos.personaje.get(paqueteEnemigo.getRaza()).get(6)[0], 0, 50, 256, 256, null);
 
 		mundo.graficarObstaculos(g);
-		menuComercio.graficar(g);
+		
+		// Si hay una propuesta la informo, sino voy al menu comercio
+		if(hayPropuesta) {
+			menuIntercambio = new MenuIntercambio(300, 50, paqueteIntercambio);
+			menuIntercambio.graficar(g);
+		} else {
+			menuComercio.graficar(g);
+		}
 
 		g.setColor(Color.GREEN);
 	}
@@ -135,10 +161,16 @@ public class EstadoComercio extends Estado {
 	public void armarPaqueteIntercambio() {
 		for (int i = 0; i < 8; i++) {
 			paqueteIntercambio.setSeleccionadoEnemigo(i, menuComercio.getEstadoBoton(i));
+			if(menuComercio.getEstadoBoton(i)) {
+				paqueteIntercambio.addDescripcionEnemigo(paqueteEnemigo.getItem(i + 1).getNombre());
+			}
 		}
 		
 		for (int i = 8; i < 16; i++) {
 			paqueteIntercambio.setSeleccionadoPersonaje(i-8, menuComercio.getEstadoBoton(i));
+			if(menuComercio.getEstadoBoton(i)) {
+				paqueteIntercambio.addDescripcionPersonaje(paquetePersonaje.getItem(i - 7).getNombre());
+			}
 		}
 	}
 
@@ -157,5 +189,8 @@ public class EstadoComercio extends Estado {
 		}
 
 	}
-
+	
+	public void proponerIntercambio() {
+		hayPropuesta = true;
+	}
 }
