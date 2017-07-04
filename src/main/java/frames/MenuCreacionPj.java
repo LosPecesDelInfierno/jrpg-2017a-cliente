@@ -9,7 +9,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.google.gson.Gson;
+
 import cliente.Cliente;
+import comunicacion.ContextoProcesador;
+import mensajeria.Comando;
 import mensajeria.PaquetePersonaje;
 
 import javax.swing.JComboBox;
@@ -23,6 +27,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 
 public class MenuCreacionPj extends JFrame {
 
@@ -33,12 +38,14 @@ public class MenuCreacionPj extends JFrame {
 	private JLabel inteligencia;
 	private JLabel salud;
 	private JLabel energia;
-
+	private ContextoProcesador contexto;
+	private Gson gson = new Gson();
 	private JComboBox<String> cbxCasta;
 	private JComboBox<String> cbxRaza;
 
-	public MenuCreacionPj(final Cliente cliente, final PaquetePersonaje personaje) {
+	public MenuCreacionPj(final Cliente cliente, final PaquetePersonaje personaje, final ContextoProcesador contexto) {
 
+		this.contexto = contexto;
 		setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
 				new ImageIcon(MenuJugar.class.getResource("/cursor.png")).getImage(), new Point(0, 0),
 				"custom cursor"));
@@ -53,20 +60,37 @@ public class MenuCreacionPj extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				personaje.setNombre(nombre.getText());
+				contexto.getPaquetePersonaje().setNombre(nombre.getText());
 				if (nombre.getText().equals(""))
 					personaje.setNombre("nameless");
-				personaje.setRaza((String) cbxRaza.getSelectedItem());
-				personaje.setSaludTope(Integer.parseInt(vecSalud[cbxRaza.getSelectedIndex()]));
-				personaje.setEnergiaTope(Integer.parseInt(vecEnergia[cbxRaza.getSelectedIndex()]));
-				personaje.setCasta((String) cbxCasta.getSelectedItem());
-				personaje.setFuerza(Integer.parseInt(vecFuerza[cbxCasta.getSelectedIndex()]));
-				personaje.setDestreza(Integer.parseInt(vecDestreza[cbxCasta.getSelectedIndex()]));
-				personaje.setInteligencia(Integer.parseInt(vecInteligencia[cbxCasta.getSelectedIndex()]));
-				synchronized (cliente) {
-					cliente.notify();
-				}
+				contexto.getPaquetePersonaje().setRaza((String) cbxRaza.getSelectedItem());
+				contexto.getPaquetePersonaje().setSaludTope(Integer.parseInt(vecSalud[cbxRaza.getSelectedIndex()]));
+				contexto.getPaquetePersonaje().setEnergiaTope(Integer.parseInt(vecEnergia[cbxRaza.getSelectedIndex()]));
+				contexto.getPaquetePersonaje().setCasta((String) cbxCasta.getSelectedItem());
+				contexto.getPaquetePersonaje().setFuerza(Integer.parseInt(vecFuerza[cbxCasta.getSelectedIndex()]));
+				contexto.getPaquetePersonaje().setDestreza(Integer.parseInt(vecDestreza[cbxCasta.getSelectedIndex()]));
+				contexto.getPaquetePersonaje().setInteligencia(Integer.parseInt(vecInteligencia[cbxCasta.getSelectedIndex()]));
+				// Le envio los datos al servidor
+				contexto.getPaquetePersonaje().setUsuario(contexto.getPaqueteUsuario().getUsername());
+				contexto.getPaquetePersonaje().setComando(Comando.CREACIONPJ);
+				try {
+				contexto.getSalida().writeObject(gson.toJson(contexto.getPaquetePersonaje()));
+				JOptionPane.showMessageDialog(null, "Registro exitoso.");
+
+				// Recibo el paquete personaje con los datos (la id
+				// incluida)
+				contexto.setPaquetePersonaje((PaquetePersonaje) gson.fromJson((String) contexto.getEntrada().readObject(),
+						PaquetePersonaje.class));
 				dispose();
+				}catch(Exception e1) {
+					e1.printStackTrace();
+				}
+				// Indico que el usuario ya inicio sesion
+				contexto.getPaqueteUsuario().setInicioSesion(true);
+//				synchronized (cliente) {
+//					cliente.notify();
+//				}
+				
 			}
 		});
 
