@@ -11,7 +11,9 @@ import cliente.EscuchaMensajes;
 import dominio.Personaje;
 import estados.Estado;
 import estados.EstadoBatalla;
+import estados.EstadoComercio;
 import estados.EstadoJuego;
+import mensajeria.Comando;
 import mensajeria.PaqueteMensaje;
 import mensajeria.PaqueteMovimiento;
 import mensajeria.PaquetePersonaje;
@@ -34,6 +36,7 @@ public class Juego implements Runnable {
 	// Estados
 	private Estado estadoJuego;
 	private Estado estadoBatalla;
+	private Estado estadoComercio;
 
 	// HandlerMouse
 	private HandlerMouse handlerMouse;
@@ -215,6 +218,14 @@ public class Juego implements Runnable {
 		this.estadoBatalla = estadoBatalla;
 	}
 
+	public EstadoComercio getEstadoComercio() {
+		return (EstadoComercio) estadoComercio;
+	}
+
+	public void setEstadoComercio(EstadoComercio estadoComercio) {
+		this.estadoComercio = estadoComercio;
+	}
+
 	public Cliente getCliente() {
 		return cliente;
 	}
@@ -244,10 +255,7 @@ public class Juego implements Runnable {
 	public void recibirMensaje(PaqueteMensaje paqueteMensaje) {
 		// IDEA: Cambiar color del texto según tipo (ej: difusión en negro, privado en amarillo)
 		// TODO: Mandar esto donde corresponda.
-		String emisor = escuchaMensajes.getPersonajesConectados().get(paqueteMensaje.getIdEmisor()).getNombre(); 
-		String textoChat = emisor + 
-				(paqueteMensaje.esDifusion() ? " (DIFUSIÓN) " : "") + 
-				": " + paqueteMensaje.getContenido();
-		JOptionPane.showMessageDialog(null, textoChat);
+		String emisor = escuchaMensajes.getPersonajesConectados().get(paqueteMensaje.getIdEmisor()).getNombre();
+		pantalla.getMessengetClient().recibirMensaje(paqueteMensaje, emisor);
 	}
 }
