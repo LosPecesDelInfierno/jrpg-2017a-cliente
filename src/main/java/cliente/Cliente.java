@@ -27,15 +27,12 @@ public class Cliente extends Thread {
 
 	private Socket cliente;
 	private String miIp;
+	private ContextoProcesador contexto;
 	private ObjectInputStream entrada;
 	private ObjectOutputStream salida;
 
 	// Objeto gson
 	private final Gson gson = new Gson();
-
-	// Paquete usuario y paquete personaje
-	private PaqueteUsuario paqueteUsuario;
-	private PaquetePersonaje paquetePersonaje;
 
 	// Acciones que realiza el usuario
 	private int accion;
@@ -63,7 +60,8 @@ public class Cliente extends Thread {
 			entrada = new ObjectInputStream(cliente.getInputStream());
 			salida = new ObjectOutputStream(cliente.getOutputStream());
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Fallo al iniciar la aplicación. Revise la conexión con el servidor.");
+			JOptionPane.showMessageDialog(null,
+					"Fallo al iniciar la aplicación. Revise la conexión con el servidor.");
 			System.exit(1);
 			e.printStackTrace();
 		}
@@ -89,7 +87,8 @@ public class Cliente extends Thread {
 			entrada = new ObjectInputStream(cliente.getInputStream());
 			salida = new ObjectOutputStream(cliente.getOutputStream());
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Fallo al iniciar la aplicación. Revise la conexión con el servidor.");
+			JOptionPane.showMessageDialog(null,
+					"Fallo al iniciar la aplicación. Revise la conexión con el servidor.");
 			System.exit(1);
 			e.printStackTrace();
 		}
@@ -98,119 +97,38 @@ public class Cliente extends Thread {
 	public void run() {
 		synchronized (this) {
 			try {
-
-				// Creo el paquete que le voy a enviar al servidor
-				paqueteUsuario = new PaqueteUsuario();
-
-				while (!paqueteUsuario.isInicioSesion()) {
-
-					// Muestro el men� principal
+				this.contexto = new ContextoProcesador(entrada, salida);
+				while (!getPaqueteUsuario().isInicioSesion()) {
 					new MenuJugar(this).setVisible(true);
-
-					// Creo los paquetes que le voy a enviar al servidor
-					paqueteUsuario = new PaqueteUsuario();
-					paquetePersonaje = new PaquetePersonaje();
-
-					// Espero a que el usuario seleccione alguna accion
 					wait();
 
 					switch (getAccion()) {
-
 					case Comando.REGISTRO:
-						paqueteUsuario.setComando(Comando.REGISTRO);
+						getPaqueteUsuario().setComando(Comando.REGISTRO);
 						break;
 					case Comando.INICIOSESION:
-						paqueteUsuario.setComando(Comando.INICIOSESION);
+						getPaqueteUsuario().setComando(Comando.INICIOSESION);
 						break;
 					case Comando.SALIR:
-						paqueteUsuario.setIp(getMiIp());
-						paqueteUsuario.setComando(Comando.SALIR);
+						getPaqueteUsuario().setIp(getMiIp());
+						getPaqueteUsuario().setComando(Comando.DESCONECTAR);
 						break;
 					}
+					salida.writeObject(gson.toJson(getPaqueteUsuario()));
 
-					// Le envio el paquete al servidor
-					salida.writeObject(gson.toJson(paqueteUsuario));
+					if (getAccion() == Comando.SALIR) {
+						this.cliente.close();
+						System.exit(1);
+					}
 
-					// Recibo el paquete desde el servidor
 					String cadenaLeida = (String) entrada.readObject();
-					Paquete paquete = gson.fromJson(cadenaLeida, Paquete.class);
-
-					ContextoProcesador contexto = new ContextoProcesador(paquete, paquetePersonaje, paqueteUsuario, entrada, 
-							salida, this, cliente); // cliente es el socket, this es el thread Cliente.
-					Procesador proceso = ProcesadorFactory.crear(paqueteUsuario.getComando(), contexto, gson);
-					
-					switch (paquete.getComando()) {
-
-					case Comando.REGISTRO:
-//						if (paquete.getMensaje().equals(Paquete.msjExito)) {
-//
-//							// Abro el menu para la creaci�n del personaje
-//							MenuCreacionPj menuCreacionPJ = new MenuCreacionPj(this, paquetePersonaje);
-//							menuCreacionPJ.setVisible(true);
-//
-//							// Espero a que el usuario cree el personaje
-//							wait();
-//
-//							// Le envio los datos al servidor
-//							paquetePersonaje.setUsuario(this.paqueteUsuario.getUsername());
-//							paquetePersonaje.setComando(Comando.CREACIONPJ);
-//							salida.writeObject(gson.toJson(paquetePersonaje));
-//							JOptionPane.showMessageDialog(null, "Registro exitoso.");
-//
-//							// Recibo el paquete personaje con los datos (la id
-//							// incluida)
-//							paquetePersonaje = (PaquetePersonaje) gson.fromJson((String) entrada.readObject(),
-//									PaquetePersonaje.class);
-//
-//							// Indico que el usuario ya inicio sesion
-//							paqueteUsuario.setInicioSesion(true);
-//
-//						} else {
-//							if (paquete.getMensaje().equals(Paquete.msjFracaso))
-//								JOptionPane.showMessageDialog(null, "No se pudo registrar.");
-//
-//							// El usuario no pudo iniciar sesi�n
-//							paqueteUsuario.setInicioSesion(false);
-//						}
-						// Esto deberia ir fuera, sin switch.
-						proceso.procesar(cadenaLeida);
-						
-						break;
-
-					case Comando.INICIOSESION:
-						if (paquete.getMensaje().equals(Paquete.msjExito)) {
-
-							// El usuario ya inicio sesión
-							paqueteUsuario.setInicioSesion(true);
-
-							// Recibo el paquete personaje con los datos
-							paquetePersonaje = (PaquetePersonaje) gson.fromJson(cadenaLeida, PaquetePersonaje.class);
-
-						} else {
-							if (paquete.getMensaje().equals(Paquete.msjFracaso))
-								JOptionPane.showMessageDialog(null,
-										"Error al iniciar sesión. Revise el usuario y la contraseña");
-
-							// El usuario no pudo iniciar sesi�n
-							paqueteUsuario.setInicioSesion(false);
-						}
-						break;
-
-					case Comando.SALIR:
-						// El usuario no pudo iniciar sesi�n
-						paqueteUsuario.setInicioSesion(false);
-						salida.writeObject(gson.toJson(new Paquete(Comando.DESCONECTAR), Paquete.class));
-						cliente.close();
-						break;
-
-					default:
-						break;
-					}
-
+					Procesador proceso = ProcesadorFactory.crear(gson.fromJson(cadenaLeida, Paquete.class).getComando(),
+							contexto, gson);
+					proceso.procesar(cadenaLeida);
 				}
 
 				// Creo un paquete con el comando mostrar mapas
-				paquetePersonaje.setComando(Comando.MOSTRARMAPAS);
+				getPaquetePersonaje().setComando(Comando.MOSTRARMAPAS);
 
 				// Abro el menu de eleccion del mapa
 				MenuMapas menuElegirMapa = new MenuMapas(this);
@@ -220,13 +138,13 @@ public class Cliente extends Thread {
 				wait();
 
 				// Establezco el mapa en el paquete personaje
-				paquetePersonaje.setIp(miIp);
+				getPaquetePersonaje().setIp(miIp);
 
 				// Le envio el paquete con el mapa seleccionado
-				salida.writeObject(gson.toJson(paquetePersonaje));
+				salida.writeObject(gson.toJson(getPaquetePersonaje()));
 
 				// Instancio el juego y cargo los recursos
-				wome = new Juego("World Of the Middle Earth", 800, 600, this, paquetePersonaje);
+				wome = new Juego("World Of the Middle Earth", 800, 600, this, getPaquetePersonaje());
 
 				// Muestro el menu de carga
 				menuCarga = new MenuCarga(this);
@@ -283,11 +201,11 @@ public class Cliente extends Thread {
 	}
 
 	public PaqueteUsuario getPaqueteUsuario() {
-		return paqueteUsuario;
+		return contexto.getPaqueteUsuario();
 	}
 
 	public PaquetePersonaje getPaquetePersonaje() {
-		return paquetePersonaje;
+		return contexto.getPaquetePersonaje();
 	}
 
 	public Juego getJuego() {

@@ -15,6 +15,8 @@ import mensajeria.Comando;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
@@ -68,7 +70,7 @@ public class MenuJugar extends JFrame {
 		lblRegistrarse.setBackground(Color.WHITE);
 
 		// Boton Iniciar sesion
-		JLabel lblIniciarSesion = new JLabel("Iniciar Sesion");
+		JLabel lblIniciarSesion = new JLabel("Iniciar Sesión");
 		lblIniciarSesion.setBounds(175, 91, 91, 23);
 		layeredPane.add(lblIniciarSesion, new Integer(2));
 		lblIniciarSesion.setForeground(Color.WHITE);
@@ -87,7 +89,7 @@ public class MenuJugar extends JFrame {
 			}
 		});
 
-		JButton btnIniciarSesion = new JButton("Iniciar Sesion");
+		JButton btnIniciarSesion = new JButton("Iniciar Sesión");
 		btnIniciarSesion.setBounds(121, 92, 191, 23);
 		layeredPane.add(btnIniciarSesion, new Integer(1));
 		btnIniciarSesion.setFocusable(false);

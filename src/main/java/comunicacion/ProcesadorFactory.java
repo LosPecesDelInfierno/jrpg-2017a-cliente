@@ -29,8 +29,6 @@ public class ProcesadorFactory {
 //			return new ProcesadorMoviento(contextoProcesador, gson);
 //		case Comando.MENSAJE: 
 //			return new ProcesadorMensaje(contextoProcesador, gson);
-		case Comando.SALIR:
-			return new ProcesadorSalir(contextoProcesador, gson);
 		default:
 			throw new ComandoDesconocidoException();
 		}
