@@ -8,6 +8,9 @@ import javax.swing.JOptionPane;
 
 import com.google.gson.Gson;
 
+import comunicacion.ContextoProcesador;
+import comunicacion.Procesador;
+import comunicacion.ProcesadorFactory;
 import estados.Estado;
 import estados.EstadoBatalla;
 import estados.EstadoComercio;
@@ -60,9 +63,10 @@ public class EscuchaMensajes extends Thread {
 			while (true) {
 
 				String objetoLeido = (String) entrada.readObject();
-
+//				ContextoProcesador contexto = new ContextoProcesador(entrada, juego);
 				paquete = gson.fromJson(objetoLeido, Paquete.class);
-
+//				Procesador proceso = ProcesadorFactory.crear(paquete.getComando(), contexto, gson);
+//				proceso.procesar(objetoLeido);
 				switch (paquete.getComando()) {
 
 				case Comando.CONEXION:

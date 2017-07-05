@@ -70,7 +70,7 @@ public class MenuJugar extends JFrame {
 		lblRegistrarse.setBackground(Color.WHITE);
 
 		// Boton Iniciar sesion
-		JLabel lblIniciarSesion = new JLabel("Iniciar Sesión");
+		JLabel lblIniciarSesion = new JLabel("Iniciar SesiÃ³n");
 		lblIniciarSesion.setBounds(175, 91, 91, 23);
 		layeredPane.add(lblIniciarSesion, new Integer(2));
 		lblIniciarSesion.setForeground(Color.WHITE);
@@ -89,7 +89,7 @@ public class MenuJugar extends JFrame {
 			}
 		});
 
-		JButton btnIniciarSesion = new JButton("Iniciar Sesión");
+		JButton btnIniciarSesion = new JButton("Iniciar Sesiï¿½n");
 		btnIniciarSesion.setBounds(121, 92, 191, 23);
 		layeredPane.add(btnIniciarSesion, new Integer(1));
 		btnIniciarSesion.setFocusable(false);
