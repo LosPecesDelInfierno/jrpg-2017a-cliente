@@ -114,7 +114,26 @@ public class EstadoComercio extends Estado {
 	}
 	
 	public void handlerIntercambio() {
-		
+		if (juego.getHandlerMouse().getNuevoClick()) {
+			posMouse = juego.getHandlerMouse().getPosMouse();
+			
+			switch(menuIntercambio.clickEnBoton(posMouse[0], posMouse[1])) {
+			case MenuIntercambio.aceptar:
+				JOptionPane.showMessageDialog(null, "Click en aceptar");
+				break;
+			case MenuIntercambio.rechazar:
+				JOptionPane.showMessageDialog(null, "Click en rechazar");
+				break;
+			case MenuIntercambio.modificar: //Reinicio el intercambio
+				hayPropuesta = false;
+				break;
+			case MenuIntercambio.cerrar:
+				JOptionPane.showMessageDialog(null, "Click en cerrar");
+				break;
+			}
+			
+			juego.getHandlerMouse().setNuevoClick(false);
+		}
 	}
 
 	@Override
@@ -143,6 +162,9 @@ public class EstadoComercio extends Estado {
 	public void recibirPaqueteIntercambio(PaqueteIntercambio paquete) {
 		paqueteIntercambio.setId(paquete.getIdEnemigo());
 		paqueteIntercambio.setIdEnemigo(paquete.getId());
+		paqueteIntercambio.reiniciarListas();
+		paqueteIntercambio.setListaPersonaje(paquete.getListaEnemigo());
+		paqueteIntercambio.setListaEnemigo(paquete.getListaPersonaje());
 		for(int i = 0; i < 8; i++) {
 			paqueteIntercambio.setSeleccionadoPersonaje(i, paquete.getSeleccionadoEnemigo(i));
 			paqueteIntercambio.setSeleccionadoEnemigo(i, paquete.getSeleccionadoPersonaje(i));
@@ -159,6 +181,8 @@ public class EstadoComercio extends Estado {
 	}
 
 	public void armarPaqueteIntercambio() {
+		paqueteIntercambio.reiniciarListas();
+		
 		for (int i = 0; i < 8; i++) {
 			paqueteIntercambio.setSeleccionadoEnemigo(i, menuComercio.getEstadoBoton(i));
 			if(menuComercio.getEstadoBoton(i)) {
@@ -192,5 +216,5 @@ public class EstadoComercio extends Estado {
 	
 	public void proponerIntercambio() {
 		hayPropuesta = true;
-	}
+	}	
 }

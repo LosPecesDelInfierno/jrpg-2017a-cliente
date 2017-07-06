@@ -35,27 +35,19 @@ public class MenuIntercambio {
 		g.drawImage(menu, x, y, null);
 
 		// Armo la lista de objetos a intercambiar
-		int linea = y + 100;
+		int linea = y + 80;
 		Pantalla.centerString(g, new Rectangle(x, linea, menu.getWidth(), 0),
 				paqueteIntercambio.getNombre() + " propone intercambiar:");
+		for (String obj : paqueteIntercambio.getListaEnemigo()) {
+			linea += 20;
+			Pantalla.centerString(g, new Rectangle(x, linea, menu.getWidth(), 0), obj);
+		}
 		linea += 40;
-		// for(String obj : paqueteIntercambio.getListaEnemigo()) {
-		// Pantalla.centerString(g, new Rectangle(x, linea, menu.getWidth(), 0),
-		// obj);
-		// linea += 20;
-		// }
-		Pantalla.centerString(g, new Rectangle(x, linea, menu.getWidth(), 0),
-				paqueteIntercambio.getListaEnemigo().size() + " elementos");
-		linea += 20;
 		Pantalla.centerString(g, new Rectangle(x, linea, menu.getWidth(), 0), "Por tu:");
-		linea += 40;
-//		for (String obj : paqueteIntercambio.getListaPersonaje()) {
-//			Pantalla.centerString(g, new Rectangle(x, linea, menu.getWidth(), 0), obj);
-//			linea += 20;
-//		}
-		
-		Pantalla.centerString(g, new Rectangle(x, linea, menu.getWidth(), 0),
-				paqueteIntercambio.getListaPersonaje().size() + " elementos");
+		for (String obj : paqueteIntercambio.getListaPersonaje()) {
+			linea += 20;
+			Pantalla.centerString(g, new Rectangle(x, linea, menu.getWidth(), 0), obj);
+		}
 
 		// muestro el nombre
 		g.setColor(Color.WHITE);
