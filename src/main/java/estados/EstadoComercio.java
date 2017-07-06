@@ -12,9 +12,11 @@ import com.google.gson.Gson;
 
 import dominio.Item;
 import interfaz.MenuComercio;
+import interfaz.MenuInfoPersonaje;
 import interfaz.MenuIntercambio;
 import juego.Juego;
 import mensajeria.PaqueteComercio;
+import mensajeria.PaqueteFinalizarComercio;
 import mensajeria.PaqueteIntercambio;
 import mensajeria.PaquetePersonaje;
 import mundo.Mundo;
@@ -27,6 +29,7 @@ public class EstadoComercio extends Estado {
 	private PaquetePersonaje paquetePersonaje;
 	private PaquetePersonaje paqueteEnemigo;
 	private PaqueteIntercambio paqueteIntercambio;
+	private PaqueteFinalizarComercio paqueteFinalizarComercio;
 
 	private boolean miTurno;
 	private boolean hayPropuesta;
@@ -50,6 +53,10 @@ public class EstadoComercio extends Estado {
 		paqueteIntercambio.setId(paqueteComercio.getId());
 		paqueteIntercambio.setIdEnemigo(paqueteComercio.getIdEnemigo());
 		paqueteIntercambio.setNombre(paqueteEnemigo.getNombre());
+		
+		paqueteFinalizarComercio = new PaqueteFinalizarComercio();
+		paqueteFinalizarComercio.setId(paqueteComercio.getId());
+		paqueteFinalizarComercio.setIdEnemigo(paqueteComercio.getIdEnemigo());
 
 		// por defecto no hay intercambio propuesto
 		hayPropuesta = false;
@@ -119,16 +126,17 @@ public class EstadoComercio extends Estado {
 			
 			switch(menuIntercambio.clickEnBoton(posMouse[0], posMouse[1])) {
 			case MenuIntercambio.aceptar:
-				JOptionPane.showMessageDialog(null, "Click en aceptar");
+				realizarIntercambio();
+				finalizarComercio(true);
 				break;
 			case MenuIntercambio.rechazar:
-				JOptionPane.showMessageDialog(null, "Click en rechazar");
+				finalizarComercio(false);
 				break;
 			case MenuIntercambio.modificar: //Reinicio el intercambio
 				hayPropuesta = false;
 				break;
-			case MenuIntercambio.cerrar:
-				JOptionPane.showMessageDialog(null, "Click en cerrar");
+			case MenuIntercambio.cerrar: // Cerrar el menu equivale a rechazar la propuesta
+				finalizarComercio(false);
 				break;
 			}
 			
@@ -180,6 +188,15 @@ public class EstadoComercio extends Estado {
 		}
 	}
 
+	public void enviarPaqueteFinalizarComercio() {
+		try {
+			juego.getCliente().getSalida().writeObject(gson.toJson(paqueteFinalizarComercio));
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "Fallo la conexion con el servidor.");
+			e.printStackTrace();
+		}
+	}
+
 	public void armarPaqueteIntercambio() {
 		paqueteIntercambio.reiniciarListas();
 		
@@ -216,5 +233,22 @@ public class EstadoComercio extends Estado {
 	
 	public void proponerIntercambio() {
 		hayPropuesta = true;
-	}	
+	}
+	
+	public void finalizarComercio(boolean aceptado) {
+		paqueteFinalizarComercio.aceptaIntercambio(aceptado);
+		enviarPaqueteFinalizarComercio();
+		
+		if(aceptado) {
+			juego.getEstadoJuego().setHaySolicitud(true, juego.getPersonaje(), MenuInfoPersonaje.menuIntercambioAceptado);
+		} else {
+			juego.getEstadoJuego().setHaySolicitud(true, juego.getPersonaje(), MenuInfoPersonaje.menuIntercambioRechazado);
+		}
+		
+		Estado.setEstado(juego.getEstadoJuego());
+	}
+	
+	public void realizarIntercambio() {
+		
+	}
 }

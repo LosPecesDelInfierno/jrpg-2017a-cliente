@@ -21,7 +21,10 @@ public class MenuInfoPersonaje {
 	public static final int menuGanarBatalla = 3;
 	public static final int menuPerderBatalla = 4;
 	public static final int menuComerciar = 5;
-	private static final String[] leyendaBoton = { "Batallar", "Volver", "Aceptar", "Aceptar", "Aceptar", "Comerciar" };
+	public static final int menuIntercambioAceptado = 6;
+	public static final int menuIntercambioRechazado = 7;
+	private static final String[] leyendaBoton = { "Batallar", "Volver", "Aceptar", "Aceptar", "Aceptar", "Comerciar",
+			"Aceptar", "Aceptar" };
 
 	private int x;
 	private int y;
@@ -66,6 +69,13 @@ public class MenuInfoPersonaje {
 			break;
 		case menuComerciar:
 			graficarMenuComerciar(g);
+			break;
+		case menuIntercambioAceptado:
+			graficarMenuIntercambioAceptado(g);
+			break;
+		case menuIntercambioRechazado:
+			graficarMenuIntercambioRechazado(g);
+			break;
 		}
 
 		// muestro los botones
@@ -147,6 +157,26 @@ public class MenuInfoPersonaje {
 		g.drawString(personaje.getCasta(), x + 100, y + 260);
 		g.drawString(personaje.getInventario().size() + " ", x + 100, y + 290);
 
+	}
+	
+	public void graficarMenuIntercambioAceptado(Graphics g) {
+
+		g.setColor(Color.BLACK);
+		Pantalla.centerString(g, new Rectangle(x, y + 200, menu.getWidth(), 0), "¡Intercambio aceptado!");
+
+		g.setFont(new Font("Book Antiqua", 0, 18));
+		Pantalla.centerString(g, new Rectangle(x, y + 240, menu.getWidth(), 0), "Los nuevos items ya estan");
+		Pantalla.centerString(g, new Rectangle(x, y + 270, menu.getWidth(), 0), "disponible en tu inventario");
+	}
+
+	public void graficarMenuIntercambioRechazado(Graphics g) {
+
+		g.setColor(Color.BLACK);
+		Pantalla.centerString(g, new Rectangle(x, y + 200, menu.getWidth(), 0), "¡Intercambio rechazado!");
+
+		g.setFont(new Font("Book Antiqua", 0, 18));
+		Pantalla.centerString(g, new Rectangle(x, y + 240, menu.getWidth(), 0), "No hay modificaciones");
+		Pantalla.centerString(g, new Rectangle(x, y + 270, menu.getWidth(), 0), "en tu inventario");
 	}
 
 	public boolean clickEnBoton(int mouseX, int mouseY) {
