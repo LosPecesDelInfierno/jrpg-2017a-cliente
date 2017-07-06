@@ -139,6 +139,8 @@ public class Cliente extends Thread {
 					proceso.procesar(cadenaLeida);
 					do{
 					}while(!contextoProcesador.getPaqueteUsuario().isInicioSesion());
+					
+					paquetePersonaje = contextoProcesador.getPaquetePersonaje();
 //					switch (paquete.getComando()) {
 //
 //					case Comando.REGISTRO:
