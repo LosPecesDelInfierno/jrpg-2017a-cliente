@@ -46,15 +46,8 @@ import java.awt.event.KeyEvent;
 
 public class MessengerClient extends Thread {
 
-	private Socket mySocket;
-	//private EscuchaMensajes escuchaMensajes;
-	private String username;
-	//private ArchivoDePropiedades properties;
-	
-	private JMenu mnChat;
-	private JMenuItem mntmConfigIpPuerto;
-	private JMenuItem mntmDesconectar_1;
-	private JMenuItem mntmConectar;
+	private String username;	
+	private int idPersonaje;
 	private JPanel contentPane;
 	private JList<String> listUsuarios;
 	private Map<Integer, VentanaChat> chatsAbiertos;
@@ -68,72 +61,10 @@ public class MessengerClient extends Thread {
 	
 	public MessengerClient(Cliente cliente) {
 		this.cliente = cliente;
-		this.username = cliente.getPaquetePersonaje().getNombre();
+		PaquetePersonaje paquetePersonaje = cliente.getPaquetePersonaje();
+		this.username = paquetePersonaje.getNombre();
+		this.idPersonaje = paquetePersonaje.getId();
 	}
-	
-//	protected synchronized void cerrarTodo() {
-//		try {
-//			for (VentanaChat ventanaChat : chatsAbiertos.values()) {
-//				ventanaChat.dispose();
-//			}
-//			if (in != null) in.close();
-//			if (out != null) out.close();
-//			if (!mySocket.isClosed()) mySocket.close();
-//			if (this.escuchaMensajes != null && this.escuchaMensajes.isAlive()) {
-//				this.escuchaMensajes.stop();
-//			}
-//			this.escuchaMensajes = null;
-//		} catch (Exception e){
-//			e.printStackTrace();
-//		} finally {
-//			actualizarVentana(false);
-//		}
-//	}
-	
-//	private boolean getUsername() throws IOException, ClassNotFoundException {
-//    	do {
-//        	String user = getNameDialog();
-//        	if (user == null) {
-//        		return false;
-//        	}
-//        	if (user.trim().isEmpty()) {
-//        		continue;
-//        	}
-//        	out.writeObject(new Message(MessageType.LOGIN, user));
-//        	out.flush();
-//        	Message response = (Message) in.readObject();
-//        	if (response.getType() != MessageType.LOGIN) continue; // Lo ignoro.
-//        	if (response.getSuccess()) {
-//        		this.username = user;
-//        		this.escuchaMensajes = new EscuchaMensajes(this, this.in);
-//        		this.escuchaMensajes.start();
-//        		this.VC.setTitle("Chat. Logeado como: " + username);
-//        		setUsuariosEnLista(response.getContent().split(","));
-//        	} else {
-//        		mostrarDialog(response.getContent(), "Error", JOptionPane.INFORMATION_MESSAGE);
-//        	}
-//        } while (this.username == null);
-//    	return true;
-//    }
-	
-//	private void actualizarVentana(boolean conectado) {
-//		mntmConectar.setEnabled(!conectado);
-//		mntmDesconectar_1.setEnabled(conectado);
-//		if (!conectado) {
-//			VC.setTitle("Chat - Estás desconectado");
-//			setUsuariosEnLista(null);
-//		}
-//		mnChat.setVisible(conectado);
-//		mntmConfigIpPuerto.setEnabled(!conectado);
-//	}
-//	
-//	private String getNameDialog() {
-//        return JOptionPane.showInputDialog(
-//            VC,
-//            "Ingrese nombre de usuario:",
-//            "LOGIN",
-//            JOptionPane.PLAIN_MESSAGE);
-//    }
 	
 	/**
 	 * @wbp.parser.entryPoint
@@ -155,80 +86,6 @@ public class MessengerClient extends Thread {
 		VC.setResizable(false);
 		VC.setBounds(100, 100, 379, 600);
 		
-		JMenuBar menuBar = new JMenuBar();
-		VC.setJMenuBar(menuBar);
-		
-		JMenu mnArchivo = new JMenu("Archivo");
-		menuBar.add(mnArchivo);
-		
-		mntmConectar = new JMenuItem("Conectar");
-		mntmDesconectar_1 = new JMenuItem("Desconectar");
-		mntmDesconectar_1.setEnabled(false);
-		JMenuItem mntmSalir = new JMenuItem("Salir");
-		mnArchivo.add(mntmConectar);
-		mnArchivo.add(mntmDesconectar_1);
-		mnArchivo.add(mntmSalir);
-		
-		mntmConectar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-//					iniciarConexion();
-				} catch (Exception e2) {
-					e2.printStackTrace();
-				}
-			}
-		});
-		
-		mntmSalir.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-//				abrirVentanaConfirmaSalir();
-			}
-		});
-		
-		mntmDesconectar_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-//				cerrarTodo();
-			}
-		});
-		
-		mnChat = new JMenu("Chat");
-		menuBar.add(mnChat);
-		
-		JMenuItem mntmSalaDeChat = new JMenuItem("Sala de Chat");
-		mntmSalaDeChat.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-//				getChatWindow("SALA");
-			}
-		});
-		mnChat.add(mntmSalaDeChat);
-		
-		JMenuItem mntmSesionPrivada = new JMenuItem("Sesión privada");
-		mntmSesionPrivada.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				seleccionarElementoLista();
-			}
-		});
-		mnChat.add(mntmSesionPrivada);
-		
-		JMenu mnAyuda = new JMenu("Ayuda");
-		menuBar.add(mnAyuda);
-		
-		mntmConfigIpPuerto = new JMenuItem("Configurar IP-Puerto");
-		mntmConfigIpPuerto.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-//				abrirVentanaConfiguracion();
-			}
-		});
-		mnAyuda.add(mntmConfigIpPuerto);
-		
-		JMenuItem mntmAcerca = new JMenuItem("Acerca");
-		mntmAcerca.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//abrirVentanaAyuda();
-			}
-		});
-		mnAyuda.add(mntmAcerca);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		VC.setContentPane(contentPane);
@@ -265,7 +122,7 @@ public class MessengerClient extends Thread {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-					PaqueteMensaje mensaje = new PaqueteMensaje(cliente.getJuego().getPersonaje().getId(), textFieldDifusion.getText());
+					PaqueteMensaje mensaje = new PaqueteMensaje(idPersonaje, textFieldDifusion.getText());
 					try {
 						cliente.getSalida().writeObject(gson.toJson(mensaje));
 						cliente.getSalida().flush();
@@ -283,7 +140,7 @@ public class MessengerClient extends Thread {
 		JButton btnDifusion = new JButton("Difundir");
 		btnDifusion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				PaqueteMensaje mensaje = new PaqueteMensaje(cliente.getJuego().getPersonaje().getId(), textFieldDifusion.getText());
+				PaqueteMensaje mensaje = new PaqueteMensaje(idPersonaje, textFieldDifusion.getText());
 				try {
 					cliente.getSalida().writeObject(gson.toJson(mensaje));
 				} catch (Exception e2) {
@@ -303,42 +160,6 @@ public class MessengerClient extends Thread {
 		VC.setVisible(true);
 	}
 	
-//	private void abrirVentanaAyuda() {
-//		new VentanaAyuda(VC);
-//	}
-	
-//	private void abrirVentanaConfirmaSalir() {
-//		int opcion = JOptionPane.showConfirmDialog(VC, "Desea salir del Chat?", "Confirmación", JOptionPane.YES_NO_OPTION);
-//		if(opcion == JOptionPane.YES_OPTION) {
-//			if(this.escuchaMensajes != null) {
-////				cerrarTodo();
-//			}
-//			System.exit(0);
-//		}
-//	}
-	
-//	private void iniciarConexion() throws UnknownHostException, IOException, ClassNotFoundException {
-//		properties = new ArchivoDePropiedades("config.properties");
-//		properties.lectura();
-//		try {
-//			mySocket = new Socket(properties.getIP(), properties.getPuerto());			
-//		} catch (ConnectException e) {
-//			mostrarDialog("Verifique el archivo de configuración", "Error al conectar", JOptionPane.ERROR_MESSAGE);
-//			return;
-//		}
-//		in = new ObjectInputStream(mySocket.getInputStream());
-//        out = new ObjectOutputStream(mySocket.getOutputStream());
-//        if (getUsername()) {
-//        	actualizarVentana(true);
-//        } else {
-//        	cerrarTodo();
-//        }
-//	}
-	
-//	protected synchronized void mostrarDialog(String texto, String titulo, int tipo) {
-//		JOptionPane.showMessageDialog(VC, texto, titulo, tipo);
-//	}
-//	
 	public void setUsuariosEnLista() {
 		DefaultListModel<String> modeloLista = new DefaultListModel<String>();
 		String txtUsuarios;
@@ -358,13 +179,7 @@ public class MessengerClient extends Thread {
 			String[] datosUsuario = listUsuarios.getSelectedValue().split("-");
 			getChatWindow(Integer.parseInt(datosUsuario[0]), datosUsuario[1]);
 		}
-		//else
-			//mostrarDialog("Seleccione un elemento de la lista", "Seleccionar Usuario", JOptionPane.INFORMATION_MESSAGE);
 	}
-
-//	private void abrirVentanaConfiguracion() {
-//		new VentanaConfiguracion(VC);
-//	}
 
 	private void seleccionaDobleClickChat(MouseEvent me) {
 		if(me.getClickCount() == 2)
@@ -381,19 +196,11 @@ public class MessengerClient extends Thread {
 	
 	private VentanaChat openChatWindow(int idUser, String username) {
 		ventanaChat = new VentanaChat(this, idUser, username);
-		
-//		ventanaChat.addWindowListener(new WindowAdapter() {
-//			@Override
-//			public void windowClosed(WindowEvent e) {
-//				chatsAbiertos.remove(ventanaChat.getIdUsuarioDestino());
-//			}
-//		});
-		//ventanaChat.setVisible(true);
 		return ventanaChat;
 	}
 
 	protected synchronized void enviarMensaje(String texto, int idDestinatario) throws IOException {
-		PaqueteMensaje msg = new PaqueteMensaje(cliente.getPaquetePersonaje().getId(), idDestinatario, texto);
+		PaqueteMensaje msg = new PaqueteMensaje(idPersonaje, idDestinatario, texto);
 		cliente.getSalida().writeObject(gson.toJson(msg));
 		cliente.getSalida().flush();
 	}

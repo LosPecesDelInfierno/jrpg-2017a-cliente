@@ -8,20 +8,16 @@ public class ProcesadorActualizarPersonaje extends Procesador {
 
 	public ProcesadorActualizarPersonaje(ContextoProcesador contextoProcesador, Gson gson) {
 		super(contextoProcesador, gson);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public String procesar(String cadenaLeida) {
-		contextoProcesador.setPaquetePersonaje((PaquetePersonaje) gson.fromJson(cadenaLeida, PaquetePersonaje.class));
+		PaquetePersonaje paquetePersonaje = gson.fromJson(cadenaLeida, PaquetePersonaje.class);
+		contextoProcesador.getPersonajesConectados().put(paquetePersonaje.getId(), paquetePersonaje);
 
-		contextoProcesador.getPersonajesConectados().remove(contextoProcesador.getPaquetePersonaje().getId());
-		contextoProcesador.getPersonajesConectados().put(contextoProcesador.getPaquetePersonaje().getId(),
-				contextoProcesador.getPaquetePersonaje());
-
-		if (contextoProcesador.getJuego().getPersonaje().getId() == contextoProcesador.getPaquetePersonaje().getId()) {
-			contextoProcesador.getJuego().actualizarPersonaje();
-			contextoProcesador.getJuego().getEstadoJuego().actualizarPersonaje();
+		if (contextoProcesador.getPaquetePersonaje().getId() == paquetePersonaje.getId()) {
+			contextoProcesador.setPaquetePersonaje((PaquetePersonaje) paquetePersonaje.clone());
+			contextoProcesador.getJuego().getEstadoJuego().actualizarPersonaje(); // volarlo
 		}
 		return null;
 	}

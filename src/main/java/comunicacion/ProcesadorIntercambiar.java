@@ -13,8 +13,8 @@ public class ProcesadorIntercambiar extends Procesador {
 
 	@Override
 	public String procesar(String cadenaLeida) {
-		contextoProcesador.setPaqueteIntercambio( gson.fromJson(cadenaLeida, PaqueteIntercambio.class));
-		contextoProcesador.getJuego().getEstadoComercio().recibirPaqueteIntercambio(contextoProcesador.getPaqueteIntercambio());
+		PaqueteIntercambio paqueteIntercambio = gson.fromJson(cadenaLeida, PaqueteIntercambio.class);
+		contextoProcesador.getJuego().getEstadoComercio().recibirPaqueteIntercambio(paqueteIntercambio);
 		contextoProcesador.getJuego().getEstadoComercio().setMiTurno(true);
 		contextoProcesador.getJuego().getEstadoComercio().actualizarBotonesActivos();
 		return null;

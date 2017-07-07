@@ -8,9 +8,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
-
 import com.google.gson.Gson;
-
 import comunicacion.ComandoDesconocidoException;
 import comunicacion.ContextoProcesador;
 import comunicacion.Procesador;
@@ -19,7 +17,6 @@ import frames.*;
 import juego.Juego;
 import mensajeria.Comando;
 import mensajeria.Paquete;
-import mensajeria.PaqueteIntercambio;
 import mensajeria.PaquetePersonaje;
 import mensajeria.PaqueteUsuario;
 
@@ -28,8 +25,6 @@ public class Cliente extends Thread {
 	private Socket cliente;
 	private String miIp;
 	private ContextoProcesador contexto;
-	private ObjectInputStream entrada;
-	private ObjectOutputStream salida;
 
 	// Objeto gson
 	private final Gson gson = new Gson();
@@ -49,7 +44,6 @@ public class Cliente extends Thread {
 		this.accion = accion;
 	}
 
-	private Juego wome;
 	private MenuCarga menuCarga;
 
 	public Cliente(String ip, int puerto) {
@@ -57,11 +51,10 @@ public class Cliente extends Thread {
 		try {
 			cliente = new Socket(ip, puerto);
 			miIp = cliente.getInetAddress().getHostAddress();
-			entrada = new ObjectInputStream(cliente.getInputStream());
-			salida = new ObjectOutputStream(cliente.getOutputStream());
+			this.contexto = new ContextoProcesador(new ObjectInputStream(cliente.getInputStream()),
+					new ObjectOutputStream(cliente.getOutputStream()));
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null,
-					"Fallo al iniciar la aplicación. Revise la conexión con el servidor.");
+			JOptionPane.showMessageDialog(null, "Fallo al iniciar la aplicación. Revise la conexión con el servidor.");
 			System.exit(1);
 			e.printStackTrace();
 		}
@@ -84,11 +77,10 @@ public class Cliente extends Thread {
 		try {
 			cliente = new Socket(ip, puerto);
 			miIp = cliente.getInetAddress().getHostAddress();
-			entrada = new ObjectInputStream(cliente.getInputStream());
-			salida = new ObjectOutputStream(cliente.getOutputStream());
+			this.contexto = new ContextoProcesador(new ObjectInputStream(cliente.getInputStream()),
+					new ObjectOutputStream(cliente.getOutputStream()));
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null,
-					"Fallo al iniciar la aplicación. Revise la conexión con el servidor.");
+			JOptionPane.showMessageDialog(null, "Fallo al iniciar la aplicación. Revise la conexión con el servidor.");
 			System.exit(1);
 			e.printStackTrace();
 		}
@@ -97,7 +89,6 @@ public class Cliente extends Thread {
 	public void run() {
 		synchronized (this) {
 			try {
-				this.contexto = new ContextoProcesador(entrada, salida);
 				while (!getPaqueteUsuario().isInicioSesion()) {
 					new MenuJugar(this).setVisible(true);
 					wait();
@@ -114,14 +105,14 @@ public class Cliente extends Thread {
 						getPaqueteUsuario().setComando(Comando.DESCONECTAR);
 						break;
 					}
-					salida.writeObject(gson.toJson(getPaqueteUsuario()));
+					contexto.getSalida().writeObject(gson.toJson(getPaqueteUsuario()));
 
 					if (getAccion() == Comando.SALIR) {
 						this.cliente.close();
 						System.exit(1);
 					}
 
-					String cadenaLeida = (String) entrada.readObject();
+					String cadenaLeida = (String) contexto.getEntrada().readObject();
 					Procesador proceso = ProcesadorFactory.crear(gson.fromJson(cadenaLeida, Paquete.class).getComando(),
 							contexto, gson);
 					proceso.procesar(cadenaLeida);
@@ -141,10 +132,10 @@ public class Cliente extends Thread {
 				getPaquetePersonaje().setIp(miIp);
 
 				// Le envio el paquete con el mapa seleccionado
-				salida.writeObject(gson.toJson(getPaquetePersonaje()));
+				contexto.getSalida().writeObject(gson.toJson(getPaquetePersonaje()));
 
 				// Instancio el juego y cargo los recursos
-				wome = new Juego("World Of the Middle Earth", 800, 600, this, getPaquetePersonaje());
+				this.contexto.setJuego(new Juego("World Of the Middle Earth", 800, 600, this));
 
 				// Muestro el menu de carga
 				menuCarga = new MenuCarga(this);
@@ -154,7 +145,7 @@ public class Cliente extends Thread {
 				wait();
 
 				// Inicio el juego
-				wome.start();
+				this.getJuego().start();
 
 				// Finalizo el menu de carga
 				menuCarga.dispose();
@@ -172,10 +163,6 @@ public class Cliente extends Thread {
 		return cliente;
 	}
 
-	public void setSocket(Socket cliente) {
-		this.cliente = cliente;
-	}
-
 	public String getMiIp() {
 		return miIp;
 	}
@@ -185,31 +172,27 @@ public class Cliente extends Thread {
 	}
 
 	public ObjectInputStream getEntrada() {
-		return entrada;
-	}
-
-	public void setEntrada(ObjectInputStream entrada) {
-		this.entrada = entrada;
+		return getContexto().getEntrada();
 	}
 
 	public ObjectOutputStream getSalida() {
-		return salida;
-	}
-
-	public void setSalida(ObjectOutputStream salida) {
-		this.salida = salida;
+		return getContexto().getSalida();
 	}
 
 	public PaqueteUsuario getPaqueteUsuario() {
-		return contexto.getPaqueteUsuario();
+		return getContexto().getPaqueteUsuario();
 	}
 
 	public PaquetePersonaje getPaquetePersonaje() {
-		return contexto.getPaquetePersonaje();
+		return getContexto().getPaquetePersonaje();
+	}
+
+	public synchronized ContextoProcesador getContexto() {
+		return this.contexto;
 	}
 
 	public Juego getJuego() {
-		return wome;
+		return getContexto().getJuego();
 	}
 
 	public MenuCarga getMenuCarga() {

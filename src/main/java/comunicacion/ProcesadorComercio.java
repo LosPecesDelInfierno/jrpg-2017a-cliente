@@ -10,16 +10,14 @@ public class ProcesadorComercio extends Procesador {
 
 	public ProcesadorComercio(ContextoProcesador contextoProcesador, Gson gson) {
 		super(contextoProcesador, gson);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public String procesar(String cadenaLeida) {
-		contextoProcesador.setPaqueteComercio(gson.fromJson(cadenaLeida, PaqueteComercio.class));
-		contextoProcesador.getJuego().getPersonaje().setEstado(Estado.estadoComercio);
+		PaqueteComercio paqueteComercio = gson.fromJson(cadenaLeida, PaqueteComercio.class); 
+		contextoProcesador.getPaquetePersonaje().setEstado(Estado.estadoComercio);
 		Estado.setEstado(null);
-		contextoProcesador.getJuego().setEstadoComercio(new EstadoComercio(contextoProcesador.getJuego(),
-				contextoProcesador.getPaqueteComercio()));
+		contextoProcesador.getJuego().setEstadoComercio(new EstadoComercio(contextoProcesador.getJuego(), paqueteComercio));
 		Estado.setEstado(contextoProcesador.getJuego().getEstadoComercio());
 		return null;
 	}

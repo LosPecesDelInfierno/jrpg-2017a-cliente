@@ -3,17 +3,15 @@ package juego;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
-
 import javax.swing.JOptionPane;
-
 import cliente.Cliente;
 import cliente.EscuchaMensajes;
+import comunicacion.ContextoProcesador;
 import dominio.Personaje;
 import estados.Estado;
 import estados.EstadoBatalla;
 import estados.EstadoComercio;
 import estados.EstadoJuego;
-import mensajeria.Comando;
 import mensajeria.PaqueteMensaje;
 import mensajeria.PaqueteMovimiento;
 import mensajeria.PaquetePersonaje;
@@ -47,21 +45,19 @@ public class Juego implements Runnable {
 	// Conexion
 	private Cliente cliente;
 	private EscuchaMensajes escuchaMensajes;
-	private PaquetePersonaje paquetePersonaje;
 	private PaqueteMovimiento ubicacionPersonaje;
 
 	private CargarRecursos cargarRecursos;
 
-	public Juego(final String nombre, final int ancho, final int alto, Cliente cliente, PaquetePersonaje pp) {
+	public Juego(final String nombre, final int ancho, final int alto, Cliente cliente) {
 		this.NOMBRE = nombre;
 		this.ALTO = alto;
 		this.ANCHO = ancho;
 		this.cliente = cliente;
-		this.paquetePersonaje = pp;
 
 		// Inicializo la ubicacion del personaje
 		ubicacionPersonaje = new PaqueteMovimiento();
-		ubicacionPersonaje.setIdPersonaje(paquetePersonaje.getId());
+		ubicacionPersonaje.setIdPersonaje(getPersonaje().getId());
 		ubicacionPersonaje.setFrame(0);
 		ubicacionPersonaje.setDireccion(6);
 
@@ -235,25 +231,16 @@ public class Juego implements Runnable {
 	}
 
 	public PaquetePersonaje getPersonaje() {
-		return paquetePersonaje;
+		return getCliente().getPaquetePersonaje();
 	}
 
 	public PaqueteMovimiento getUbicacionPersonaje() {
 		return ubicacionPersonaje;
 	}
 
-	public void setPersonaje(PaquetePersonaje paquetePersonaje) {
-		this.paquetePersonaje = paquetePersonaje;
-	}
-
-	public void actualizarPersonaje() {
-		paquetePersonaje = (PaquetePersonaje) (escuchaMensajes.getPersonajesConectados().get(paquetePersonaje.getId())
-				.clone());
-		// cliente.set
-	}
-	
 	public void recibirMensaje(PaqueteMensaje paqueteMensaje) {
-		// IDEA: Cambiar color del texto según tipo (ej: difusión en negro, privado en amarillo)
+		// IDEA: Cambiar color del texto según tipo (ej: difusión en negro,
+		// privado en amarillo)
 		// TODO: Mandar esto donde corresponda.
 		String emisor = escuchaMensajes.getPersonajesConectados().get(paqueteMensaje.getIdEmisor()).getNombre();
 		pantalla.getMessengetClient().recibirMensaje(paqueteMensaje, emisor);

@@ -218,11 +218,9 @@ public class EstadoBatalla extends Estado {
 		} else if (paquetePersonaje.getRaza().equals("Elfo")) {
 			personaje = new Elfo(nombre, salud, energia, fuerza, destreza, inteligencia, casta, experiencia, nivel, id);
 		}
-		
-		personaje.setBonus(paquetePersonaje.getBonusSalud(), 
-				paquetePersonaje.getBonusEnergia(),
-				paquetePersonaje.getBonusFuerza(),
-				paquetePersonaje.getBonusDestreza(),
+
+		personaje.setBonus(paquetePersonaje.getBonusSalud(), paquetePersonaje.getBonusEnergia(),
+				paquetePersonaje.getBonusFuerza(), paquetePersonaje.getBonusDestreza(),
 				paquetePersonaje.getBonusInteligencia());
 
 		nombre = paqueteEnemigo.getNombre();
@@ -251,11 +249,9 @@ public class EstadoBatalla extends Estado {
 		} else if (paqueteEnemigo.getRaza().equals("Elfo")) {
 			enemigo = new Elfo(nombre, salud, energia, fuerza, destreza, inteligencia, casta, experiencia, nivel, id);
 		}
-		
-		enemigo.setBonus(paqueteEnemigo.getBonusSalud(), 
-				paqueteEnemigo.getBonusEnergia(),
-				paqueteEnemigo.getBonusFuerza(),
-				paqueteEnemigo.getBonusDestreza(),
+
+		enemigo.setBonus(paqueteEnemigo.getBonusSalud(), paqueteEnemigo.getBonusEnergia(),
+				paqueteEnemigo.getBonusFuerza(), paqueteEnemigo.getBonusDestreza(),
 				paqueteEnemigo.getBonusInteligencia());
 	}
 
@@ -299,14 +295,6 @@ public class EstadoBatalla extends Estado {
 			JOptionPane.showMessageDialog(null, "Fallo la conexión con el servidor.");
 			e.printStackTrace();
 		}
-	}
-
-	public PaquetePersonaje getPaquetePersonaje() {
-		return paquetePersonaje;
-	}
-
-	public PaquetePersonaje getPaqueteEnemigo() {
-		return paqueteEnemigo;
 	}
 
 	public void setMiTurno(boolean b) {
