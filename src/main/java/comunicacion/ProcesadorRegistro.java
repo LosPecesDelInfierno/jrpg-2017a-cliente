@@ -1,11 +1,10 @@
 package comunicacion;
 
 import javax.swing.JOptionPane;
-
 import com.google.gson.Gson;
-
 import frames.MenuCreacionPj;
 import mensajeria.Paquete;
+import mensajeria.PaquetePersonaje;
 
 public class ProcesadorRegistro extends Procesador {
 
@@ -15,24 +14,17 @@ public class ProcesadorRegistro extends Procesador {
 
 	@Override
 	public String procesar(String cadenaLeida) {
-		if (contextoProcesador.getPaquete().getMensaje().equals(Paquete.msjExito)) {
-			MenuCreacionPj menuCreacionPJ = new MenuCreacionPj(contextoProcesador.getCliente(),
-					contextoProcesador.getPaquetePersonaje(), contextoProcesador);
-			
-			menuCreacionPJ.setVisible(true);
-			
-			do {
-			//No hago nada!!!!
-			} while(!contextoProcesador.getPaqueteUsuario().isInicioSesion());
-			// aca deberia esperar termine el menu creacion.
-		} else {
-			if (contextoProcesador.getPaquete().getMensaje().equals(Paquete.msjFracaso))
-				JOptionPane.showMessageDialog(null, "No se pudo registrar.");
+		PaquetePersonaje paquetePersonaje = gson.fromJson(cadenaLeida, PaquetePersonaje.class);
 
-			// El usuario no pudo iniciar sesi�n
+		if (paquetePersonaje.getMensaje().equals(Paquete.msjExito)) {
+			MenuCreacionPj menuCreacionPJ = new MenuCreacionPj(contextoProcesador);
+			menuCreacionPJ.setModal(true);
+			menuCreacionPJ.setVisible(true);
+		} else {
+			if (paquetePersonaje.getMensaje().equals(Paquete.msjFracaso))
+				JOptionPane.showMessageDialog(null, "No se pudo registrar.");
 			contextoProcesador.getPaqueteUsuario().setInicioSesion(false);
 		}
-
 		return null;
 	}
 

@@ -11,13 +11,12 @@ import javax.swing.border.EmptyBorder;
 
 import com.google.gson.Gson;
 
-import cliente.Cliente;
 import comunicacion.ContextoProcesador;
 import mensajeria.Comando;
-import mensajeria.Paquete;
 import mensajeria.PaquetePersonaje;
 
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
@@ -30,7 +29,7 @@ import javax.swing.JButton;
 import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 
-public class MenuCreacionPj extends JFrame {
+public class MenuCreacionPj extends JDialog {
 
 	private JPanel contentPane;
 	private JTextField nombre;
@@ -39,59 +38,28 @@ public class MenuCreacionPj extends JFrame {
 	private JLabel inteligencia;
 	private JLabel salud;
 	private JLabel energia;
-	private Gson gson = new Gson();
 	private ContextoProcesador contexto;
+	private Gson gson = new Gson();
 	private JComboBox<String> cbxCasta;
 	private JComboBox<String> cbxRaza;
-
-	public MenuCreacionPj(final Cliente cliente, final PaquetePersonaje personaje, final ContextoProcesador contexto) {
+	final String vecSalud[] = { "55", "50", "60" };
+	final String vecEnergia[] = { "55", "60", "50" };
+	final String vecFuerza[] = { "15", "10", "10" };
+	final String vecDestreza[] = { "10", "10", "15" };
+	final String vecInteligencia[] = { "10", "15", "10" };
+	
+	public MenuCreacionPj(final ContextoProcesador contexto) {
 
 		this.contexto = contexto;
 		setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
 				new ImageIcon(MenuJugar.class.getResource("/cursor.png")).getImage(), new Point(0, 0),
 				"custom cursor"));
 
-		final String vecSalud[] = { "55", "50", "60" };
-		final String vecEnergia[] = { "55", "60", "50" };
-		final String vecFuerza[] = { "15", "10", "10" };
-		final String vecDestreza[] = { "10", "10", "15" };
-		final String vecInteligencia[] = { "10", "15", "10" };
-
 		// En caso de cerrar
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				contexto.getPaquetePersonaje().setNombre(nombre.getText());
-				if (nombre.getText().equals(""))
-					contexto.getPaquetePersonaje().setNombre("nameless");
-				contexto.getPaquetePersonaje().setRaza((String) cbxRaza.getSelectedItem());
-				contexto.getPaquetePersonaje().setSaludTope(Integer.parseInt(vecSalud[cbxRaza.getSelectedIndex()]));
-				contexto.getPaquetePersonaje().setEnergiaTope(Integer.parseInt(vecEnergia[cbxRaza.getSelectedIndex()]));
-				contexto.getPaquetePersonaje().setCasta((String) cbxCasta.getSelectedItem());
-				contexto.getPaquetePersonaje().setFuerza(Integer.parseInt(vecFuerza[cbxCasta.getSelectedIndex()]));
-				contexto.getPaquetePersonaje().setDestreza(Integer.parseInt(vecDestreza[cbxCasta.getSelectedIndex()]));
-				contexto.getPaquetePersonaje().setInteligencia(Integer.parseInt(vecInteligencia[cbxCasta.getSelectedIndex()]));
-				contexto.getPaquetePersonaje().setUsuario(contexto.getPaqueteUsuario().getUsername());
-				contexto.getPaquetePersonaje().setComando(Comando.CREACIONPJ);
-				try {
-				contexto.getSalida().writeObject(gson.toJson(contexto.getPaquetePersonaje()));
-				JOptionPane.showMessageDialog(null, "Registro exitoso.");
-
-				// Recibo el paquete personaje con los datos (la id
-				// incluida)
-				contexto.setPaquetePersonaje((PaquetePersonaje) gson
-						.fromJson((String) contexto.getEntrada().readObject(), PaquetePersonaje.class));
-
-				// Indico que el usuario ya inicio sesion
-				contexto.getPaqueteUsuario().setInicioSesion(true);
-
-				// synchronized (cliente) {
-				// cliente.notify();
-				// }
-				}catch(Exception e1) {
-					e1.printStackTrace();
-				}
-				dispose();
+				cerrar();				
 			}
 		});
 
@@ -190,37 +158,7 @@ public class MenuCreacionPj extends JFrame {
 
 		btnAceptar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				contexto.getPaquetePersonaje().setNombre(nombre.getText());
-				if (nombre.getText().equals(""))
-					contexto.getPaquetePersonaje().setNombre("nameless");
-				contexto.getPaquetePersonaje().setRaza((String) cbxRaza.getSelectedItem());
-				contexto.getPaquetePersonaje().setSaludTope(Integer.parseInt(vecSalud[cbxRaza.getSelectedIndex()]));
-				contexto.getPaquetePersonaje().setEnergiaTope(Integer.parseInt(vecEnergia[cbxRaza.getSelectedIndex()]));
-				contexto.getPaquetePersonaje().setCasta((String) cbxCasta.getSelectedItem());
-				contexto.getPaquetePersonaje().setFuerza(Integer.parseInt(vecFuerza[cbxCasta.getSelectedIndex()]));
-				contexto.getPaquetePersonaje().setDestreza(Integer.parseInt(vecDestreza[cbxCasta.getSelectedIndex()]));
-				contexto.getPaquetePersonaje().setInteligencia(Integer.parseInt(vecInteligencia[cbxCasta.getSelectedIndex()]));
-				contexto.getPaquetePersonaje().setUsuario(contexto.getPaqueteUsuario().getUsername());
-				contexto.getPaquetePersonaje().setComando(Comando.CREACIONPJ);
-				try {
-					contexto.getSalida().writeObject(gson.toJson(contexto.getPaquetePersonaje()));
-					JOptionPane.showMessageDialog(null, "Registro exitoso.");
-
-					// Recibo el paquete personaje con los datos (la id
-					// incluida)
-					contexto.setPaquetePersonaje((PaquetePersonaje) gson
-							.fromJson((String) contexto.getEntrada().readObject(), PaquetePersonaje.class));
-
-					// Indico que el usuario ya inicio sesion
-					contexto.getPaqueteUsuario().setInicioSesion(true);
-
-					// synchronized (cliente) {
-					// cliente.notify();
-					// }
-					}catch(Exception e1) {
-						e1.printStackTrace();
-					}
-				dispose();
+				cerrar();
 			}
 		});
 
@@ -267,5 +205,35 @@ public class MenuCreacionPj extends JFrame {
 		lblBackground.setBounds(0, 0, 444, 271);
 		layeredPane.add(lblBackground, new Integer(0));
 		lblBackground.setIcon(new ImageIcon(MenuCreacionPj.class.getResource("/frames/menuBackground.jpg")));
+	}
+	
+	private void cerrar() {
+		contexto.getPaquetePersonaje().setNombre(nombre.getText());
+		if (nombre.getText().equals(""))
+			contexto.getPaquetePersonaje().setNombre("nameless");
+		contexto.getPaquetePersonaje().setRaza((String) cbxRaza.getSelectedItem());
+		contexto.getPaquetePersonaje().setSaludTope(Integer.parseInt(vecSalud[cbxRaza.getSelectedIndex()]));
+		contexto.getPaquetePersonaje().setEnergiaTope(Integer.parseInt(vecEnergia[cbxRaza.getSelectedIndex()]));
+		contexto.getPaquetePersonaje().setCasta((String) cbxCasta.getSelectedItem());
+		contexto.getPaquetePersonaje().setFuerza(Integer.parseInt(vecFuerza[cbxCasta.getSelectedIndex()]));
+		contexto.getPaquetePersonaje().setDestreza(Integer.parseInt(vecDestreza[cbxCasta.getSelectedIndex()]));
+		contexto.getPaquetePersonaje().setInteligencia(Integer.parseInt(vecInteligencia[cbxCasta.getSelectedIndex()]));
+		// Le envio los datos al servidor
+		contexto.getPaquetePersonaje().setUsuario(contexto.getPaqueteUsuario().getUsername());
+		contexto.getPaquetePersonaje().setComando(Comando.CREACIONPJ);
+		try {
+		contexto.getSalida().writeObject(gson.toJson(contexto.getPaquetePersonaje()));
+		JOptionPane.showMessageDialog(null, "Registro exitoso.");
+
+		// Recibo el paquete personaje con los datos (la id
+		// incluida)
+		contexto.setPaquetePersonaje((PaquetePersonaje) gson.fromJson((String) contexto.getEntrada().readObject(),
+				PaquetePersonaje.class));
+		}catch(Exception e1) {
+			e1.printStackTrace();
+		}
+		// Indico que el usuario ya inicio sesion
+		contexto.getPaqueteUsuario().setInicioSesion(true);				
+		dispose();
 	}
 }

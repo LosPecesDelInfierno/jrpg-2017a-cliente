@@ -2,37 +2,33 @@ package comunicacion;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
-
-import cliente.Cliente;
-import mensajeria.Paquete;
+import java.util.Map;
+import juego.Juego;
+import mensajeria.PaqueteMovimiento;
 import mensajeria.PaquetePersonaje;
 import mensajeria.PaqueteUsuario;
 
 public class ContextoProcesador {
-	private Paquete paquete;
 	private PaquetePersonaje paquetePersonaje;
 	private PaqueteUsuario paqueteUsuario;
 	private ObjectInputStream entrada;
 	private ObjectOutputStream salida;
-	private Cliente cliente;
-	private Socket socketCliente;
+	private Juego juego;
 	
-	public ContextoProcesador(Paquete paquete, PaquetePersonaje paquetePersonaje, PaqueteUsuario paqueteUsuario,
-			ObjectInputStream entrada, ObjectOutputStream salida, Cliente cliente, Socket socketCliente) {
-		this.paquete = paquete;
-		this.paquetePersonaje = paquetePersonaje;
-		this.paqueteUsuario = paqueteUsuario;
+	private Map<Integer, PaqueteMovimiento> ubicacionPersonajes;
+	private Map<Integer, PaquetePersonaje> personajesConectados;
+
+	public ContextoProcesador(ObjectInputStream entrada, ObjectOutputStream salida) {
 		this.entrada = entrada;
 		this.salida = salida;
-		this.setCliente(cliente);
-		this.setSocketCliente(socketCliente);
+		this.paqueteUsuario = new PaqueteUsuario();
+		this.paquetePersonaje = new PaquetePersonaje();
 	}
 
 	public PaquetePersonaje getPaquetePersonaje() {
 		return this.paquetePersonaje;
 	}
-	
+
 	public void setPaquetePersonaje(PaquetePersonaje paquetePersonaje) {
 		this.paquetePersonaje = paquetePersonaje;
 	}
@@ -41,47 +37,35 @@ public class ContextoProcesador {
 		return paqueteUsuario;
 	}
 
-	public void setPaqueteUsuario(PaqueteUsuario paqueteUsuario) {
-		this.paqueteUsuario = paqueteUsuario;
-	}
-
 	public ObjectInputStream getEntrada() {
 		return entrada;
-	}
-
-	public void setEntrada(ObjectInputStream entrada) {
-		this.entrada = entrada;
 	}
 
 	public ObjectOutputStream getSalida() {
 		return salida;
 	}
 
-	public void setSalida(ObjectOutputStream salida) {
-		this.salida = salida;
+	public Map<Integer, PaquetePersonaje> getPersonajesConectados() {
+		return personajesConectados;
 	}
 
-	public Paquete getPaquete() {
-		return paquete;
+	public void setPersonajesConectados(Map<Integer, PaquetePersonaje> personajesConectados) {
+		this.personajesConectados = personajesConectados;
 	}
 
-	public void setPaquete(Paquete paquete) {
-		this.paquete = paquete;
+	public Map<Integer, PaqueteMovimiento> getUbicacionPersonajes() {
+		return ubicacionPersonajes;
 	}
 
-	public Cliente getCliente() {
-		return cliente;
+	public void setUbicacionPersonajes(Map<Integer, PaqueteMovimiento> ubicacionPersonajes) {
+		this.ubicacionPersonajes = ubicacionPersonajes;
 	}
 
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
+	public Juego getJuego() {
+		return juego;
 	}
 
-	public Socket getSocketCliente() {
-		return socketCliente;
-	}
-
-	public void setSocketCliente(Socket socketCliente) {
-		this.socketCliente = socketCliente;
+	public void setJuego(Juego juego) {
+		this.juego = juego;
 	}
 }

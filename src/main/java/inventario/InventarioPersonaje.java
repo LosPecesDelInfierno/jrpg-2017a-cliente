@@ -1,34 +1,20 @@
 package inventario;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.Point;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
 import dominio.Item;
 import dominio.TipoItem;
-
-import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
-
-import java.awt.Component;
-import javax.swing.Box;
 import javax.swing.ImageIcon;
-import java.awt.event.MouseMotionAdapter;
 import java.util.Collection;
-import java.util.List;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import javax.swing.SwingConstants;
-import mensajeria.Paquete;
 import mensajeria.PaquetePersonaje;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.Window.Type;
 
 public class InventarioPersonaje extends JFrame {
 
