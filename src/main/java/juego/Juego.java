@@ -238,6 +238,10 @@ public class Juego implements Runnable {
 		return ubicacionPersonaje;
 	}
 
+	public void actualizarUsuariosChat() {
+		pantalla.getMessengetClient().setUsuariosEnLista();
+	}
+	
 	public void recibirMensaje(PaqueteMensaje paqueteMensaje) {
 		// IDEA: Cambiar color del texto según tipo (ej: difusión en negro,
 		// privado en amarillo)

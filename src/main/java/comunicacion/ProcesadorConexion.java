@@ -13,6 +13,7 @@ public class ProcesadorConexion extends Procesador {
 	public String procesar(String cadenaLeida) {
 		contextoProcesador
 				.setPersonajesConectados(gson.fromJson(cadenaLeida, PaqueteDePersonajes.class).getPersonajes());
+		contextoProcesador.getJuego().actualizarUsuariosChat();
 		return null;
 	}
 
