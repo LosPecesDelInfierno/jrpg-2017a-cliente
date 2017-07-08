@@ -29,6 +29,8 @@ public class ProcesadorFactory {
 			return new ProcesadorMovimiento(contextoProcesador, gson);
 		case Comando.MENSAJE: 
 			return new ProcesadorMensaje(contextoProcesador, gson);
+		case Comando.FINALIZARCOMERCIO: 
+			return new ProcesadorFinalizarComercio(contextoProcesador, gson);
 		default:
 			throw new ComandoDesconocidoException();
 		}

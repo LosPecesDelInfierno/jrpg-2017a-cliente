@@ -215,6 +215,7 @@ public class Mundo {
 
 	public static boolean esZonaMercado(int[] posicion) {
 
+		
 		if (posicion[0] >= 4 && posicion[0] <= 17 && posicion[1] >= 13 && posicion[1] <= 15) {
 			return true;
 		}

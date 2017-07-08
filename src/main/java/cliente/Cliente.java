@@ -49,10 +49,10 @@ public class Cliente extends Thread {
 	public Cliente(String ip, int puerto) {
 
 		try {
-			cliente = new Socket(ip, puerto);
-			miIp = cliente.getInetAddress().getHostAddress();
-			this.contexto = new ContextoProcesador(new ObjectInputStream(cliente.getInputStream()),
-					new ObjectOutputStream(cliente.getOutputStream()));
+			socketCliente = new Socket(ip, puerto);
+			miIp = socketCliente.getInetAddress().getHostAddress();
+			this.contexto = new ContextoProcesador(new ObjectInputStream(socketCliente.getInputStream()),
+					new ObjectOutputStream(socketCliente.getOutputStream()));
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "Fallo al iniciar la aplicación. Revise la conexión con el servidor.");
 			System.exit(1);
@@ -75,10 +75,10 @@ public class Cliente extends Thread {
 		}
 
 		try {
-			cliente = new Socket(ip, puerto);
-			miIp = cliente.getInetAddress().getHostAddress();
-			this.contexto = new ContextoProcesador(new ObjectInputStream(cliente.getInputStream()),
-					new ObjectOutputStream(cliente.getOutputStream()));
+			socketCliente = new Socket(ip, puerto);
+			miIp = socketCliente.getInetAddress().getHostAddress();
+			this.contexto = new ContextoProcesador(new ObjectInputStream(socketCliente.getInputStream()),
+					new ObjectOutputStream(socketCliente.getOutputStream()));
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "Fallo al iniciar la aplicación. Revise la conexión con el servidor.");
 			System.exit(1);
@@ -108,7 +108,7 @@ public class Cliente extends Thread {
 					contexto.getSalida().writeObject(gson.toJson(getPaqueteUsuario()));
 
 					if (getAccion() == Comando.SALIR) {
-						this.cliente.close();
+						this.socketCliente.close();
 						System.exit(1);
 					}
 

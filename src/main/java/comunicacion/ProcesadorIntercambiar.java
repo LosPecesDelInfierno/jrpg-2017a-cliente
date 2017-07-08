@@ -17,6 +17,7 @@ public class ProcesadorIntercambiar extends Procesador {
 		contextoProcesador.getJuego().getEstadoComercio().recibirPaqueteIntercambio(paqueteIntercambio);
 		contextoProcesador.getJuego().getEstadoComercio().setMiTurno(true);
 		contextoProcesador.getJuego().getEstadoComercio().actualizarBotonesActivos();
+		contextoProcesador.getJuego().getEstadoComercio().proponerIntercambio();
 		return null;
 	}
 
